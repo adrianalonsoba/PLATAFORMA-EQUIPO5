@@ -11,7 +11,7 @@ Meteor.subscribe("all_games");
  */
 Meteor.startup(function() {
     // Miramos si la coleccion de objetos esta vacia, y en caso de estarlo añadimos los juegos
-   
+    $(".itemi").toogleClass("item active")
 });
 
 Template.PrincipalGames.games = function (){
