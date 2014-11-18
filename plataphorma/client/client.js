@@ -10,8 +10,13 @@ Meteor.subscribe("all_games");
  *  Inicializacion del juego
  */
 Meteor.startup(function() {
-    // Miramos si la coleccion de objetos esta vacia, y en caso de estarlo añadimos los juegos
-   
+    // Ocultamos la seccion de minijuegos
+   $("#minigames").hide()
+   $("#home").click(function(){
+   		$("#minigames").slideUp("slow")
+   		$("#myCarousel").show("slow")
+   		$("#principal").slideDown("slow")
+   })
 });
 
 Template.PrincipalGames.games = function (){
@@ -20,6 +25,19 @@ Template.PrincipalGames.games = function (){
 
 Template.BannerGames.games = function (){
     return Games.find();
+}
+
+Template.PrincipalGames.events = {
+    'click #AlienInvasion': function () {
+    	$("#principal").slideUp("slow")
+    	$("#minigames").show("slow")
+    	$("#myCarousel").hide("slow")
+    },
+    'click #FrootWars': function () {
+    	$("#principal").slideUp("slow")
+    	$("#minigames").show("slow")
+    	$("#myCarousel").hide("slow")
+    },
 }
 
 
