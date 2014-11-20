@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Modern Business - Start Bootstrap Template</title>
+    <title>Plataforma Equipo 5</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -52,7 +52,7 @@
                         <a href="#" id="home">Home</a>
                     </li>
                     <li>
-                        <a href="services.html">Services</a>
+                        <a href="#" id="rankingButton">Ranking</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -147,7 +147,12 @@
             {{>MiniGames}}
 
         </div>
-        
+
+<!--_____________________________________  RANKING E INFO PERSONAL ____________________________ -->
+<div class="row" id="ranking">
+        {{>Ranking}}
+</div>
+
         <!-- Footer -->
         <footer>
             <div class="row">
@@ -317,3 +322,89 @@
   </div>
   
 </template>
+
+<!--____________Template para el ranking ___________-->
+
+<template name="Ranking">
+  <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Ranking
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Projects Row -->
+        <div class="row">
+            <div class="col-md-6 img-portfolio">
+                <div class="well">
+                    <h3>
+                        <a href="portfolio-item.html">By Victories</a>
+                    </h3>
+                    <ul class="list-unstyled">
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                     </ul>
+                </div>
+            </div>
+            <div class="col-md-6 img-portfolio">
+                <div class="well">
+                    <h3>
+                        <a href="portfolio-item.html">By Points</a>
+                    </h3>
+                   <ul class="list-unstyled">
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                    <li><a href="#">Jugador</a>
+                                    </li>
+                                </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Projects Row -->
+        <div class="row">
+            <div class="well">
+                <div class="col-lg-12">
+                    <h3 class="page-header">[FOTACA!] Personal info</h3>
+                </div>
+
+                <p>Posicion: [POSICIONACA!]</p>
+                <p>Ratio: [Ganadas/Perdidas]</p>
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Mis partidas</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <li><a href="#">Partida</a>
+                                    </li>
+                                <li><a href="#">Partida</a>
+                                    </li>
+                                 <li><a href="#">Partida</a>
+                                    </li>
+                            </div>
+                        </div>
+                 </div>
+                 <h3 class="page-header">PUNTOS:</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+</template>
+
