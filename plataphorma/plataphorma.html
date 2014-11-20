@@ -134,26 +134,81 @@
     <!-- Page Content -->
     <div class="container">
 
-<!-- ____________PORTADA, ACCESO A LOS JUEGOS __________________-->
+<!-- _____________________PORTADA, ACCESO A LOS JUEGOS __________________-->
         <!-- Marketing Icons Section -->
         <div class="row" id="principal">
             {{> PrincipalGames}}
         </div>
         <!-- /.row -->
-
+<!--_____________________________________  MINIGAMES  _______________________________________-->
         <!-- Content Row -->
         <div class="row" id="minigames">
+
+            {{>MiniGames}}
+
+        </div>
+        
+        <!-- Footer -->
+        <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Titulo del juego
+                    <p>Copyright &copy; URJC 2014</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+
+
+
+ <!--*********************************** TEMPLATES *********************************-->
+<template name="PrincipalGames">
+    {{#each games}}
+	    <div class="col-md-4">
+		<div class="panel panel-default">
+		    <div class="panel-heading">
+		        <h4><i class="fa fa-fw fa-check"></i>{{name}}</h4>
+		    </div>
+		    <div class="panel-body">
+		        <p>{{tutorial}}</p>
+		        <a href="#" class="btn btn-default" id="{{name}}" value="{{name}}">Let's Play!</a>
+		    </div>
+		</div>
+	    </div>
+    {{/each}}
+</template>
+
+<!--_________Template para el banner________-->
+<template name="BannerGames">
+    {{#each games}}
+	    <div class="item">
+                <div class="fill" style="background-image:url('{{banner}}');"></div>
+                <div class="carousel-caption">
+                    <h2>{{name}}</h2>
+                </div>
+            </div>
+    {{/each}}
+</template>
+<!--_________Template para minijuegos________-->
+<template name="MiniGames">
+
+    <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{game}}
                     </h1>
                 </div>
             </div>
 
-            <!-- ********************************************************  MINIGAMES  ********************************************-->
             <div class="col-lg-8">
                 <!-- Preview Image -->
-                        AQUI VA EL CANVAS DE CADA JUEGO CON UN TEMPLATE
+                  <div id='container'>
+                    {{> alien_invasion}}      
+                  </div>
+                  <div id="gamecontainer">
+                    {{> froot_wars}}      
+                  </div>
 
                 <hr>
 
@@ -223,47 +278,42 @@
 
             </div>
 
-        </div>
-        
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; URJC 2014</p>
-                </div>
-            </div>
-        </footer>
-
-    </div>
-
-</body>
-
-
-
- <!--*********************************** TEMPLATE PRINCIPAL PARA JUEGOS (PORTADA DE LA APP) *********************************-->
-<template name="PrincipalGames">
-    {{#each games}}
-	    <div class="col-md-4">
-		<div class="panel panel-default">
-		    <div class="panel-heading">
-		        <h4><i class="fa fa-fw fa-check"></i>{{name}}</h4>
-		    </div>
-		    <div class="panel-body">
-		        <p>{{tutorial}}</p>
-		        <a href="#" class="btn btn-default" id="{{name}}" value="{{name}}">Let's Play!</a>
-		    </div>
-		</div>
-	    </div>
-    {{/each}}
 </template>
-
-<template name="BannerGames">
-    {{#each games}}
-	    <div class="item">
-                <div class="fill" style="background-image:url('{{banner}}');"></div>
-                <div class="carousel-caption">
-                    <h2>{{name}}</h2>
-                </div>
-            </div>
-    {{/each}}
+<!--_________Template para Alien Invasion________-->
+<template name="alien_invasion">
+  <canvas id='game' width='320' height='480'></canvas>
+</template>
+<!--_________Template para froot wars________-->
+<template name="froot_wars">
+  <canvas id="gamecanvas" width="640" height="480" class="gamelayer">
+  </canvas>
+  
+  <div id="scorescreen" class="gamelayer">
+    <img id="togglemusic" src="images/icons/sound.png" onclick="game.toggleBackgroundMusic();">
+    <img src="images/icons/prev.png" onclick="game.restartLevel();">
+    <span id="score">Score: 0</span>
+  </div>
+  
+  <div id="gamestartscreen" class="gamelayer">
+    <img src="images/icons/play.png" alt="Play Game" onclick = "game.showLevelScreen();"><br>
+    <img src="images/icons/settings.png" alt="Settings">
+  </div>
+  
+  <div id="levelselectscreen" class="gamelayer">
+  </div>
+  
+  <div id="loadingscreen" class="gamelayer">
+    <div id="loadingmessage"></div>
+  </div>
+  
+  <div id="endingscreen" class="gamelayer">
+    <div>
+      <p id="endingmessage">The Level Is Over Message</p>
+      <p id="playcurrentlevel" onclick="game.restartLevel();"><img src="images/icons/prev.png"> Replay Current Level</p>
+      <p id="playnextlevel" onclick="game.startNextLevel();"><img src="images/icons/next.png"> Play Next Level </p> 
+      
+      <p id="returntolevelscreen" onclick="game.showLevelScreen();"><img src="images/icons/return.png"> Return to Level Screen</p>
+    </div>
+  </div>
+  
 </template>
