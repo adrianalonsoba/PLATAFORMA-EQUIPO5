@@ -4,7 +4,11 @@
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
 
-
+//Zona reactiva para las puntuaciones y los mensajes
+Tracker.autorun(function(){
+    var current_game = Session.get("current_game");
+    Meteor.subscribe("current_scores", current_game);
+});
 
 /*******************************************************************************
  *  Inicializacion del juego
@@ -45,20 +49,38 @@ Template.BannerGames.games = function (){
     return Games.find();
 }
 
+Template.MiniGames.MiniRanking=function(){
+    var matches =  Scores.find({}, {limit:4, sort: {points:-1}});
+
+    var users_data = [];
+
+    matches.forEach (function (m) {
+        var user = Meteor.users.findOne({_id: m.user_id});
+        if (user){
+            var game = Games.findOne({_id: m.game_id});
+            users_data.push({name: user.username, points: m.points});
+        }
+    });
+    return users_data;
+}
+
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
     	$("#principal").slideUp("slow")
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
       $("#container").show();
-      var game = Games.findOne({name:"Alien Invasion"});
+      var game = Games.findOne({name:"AlienInvasion"});
+      Session.set("current_game", game._id);
+
     },
     'click #FrootWars': function () {
     	$("#principal").slideUp("slow")
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
       $("#gamecontainer").show();
-      var game = Games.findOne({name:"AlienInvasion"});
+      var game = Games.findOne({name:"FrootWars"});
+      Session.set("current_game", game._id);
     },
 }
 

@@ -7,6 +7,50 @@ Meteor.publish("all_games", function () {
     return Games.find();
 });
 
+Meteor.publish("current_scores", function(current_game){
+    var filtro;
+
+    if (current_game == "none")
+	filtro = {};
+    else 
+	filtro = {game_id: current_game};
+
+    // publish every field of the latest 5 matches sorted by points in
+    // descending order
+    return Scores.find(filtro,{});
+    
+});
+
+
+
+//Definición de permisos de usuarios que intentan tocar dentro de la colección users.
+function adminUser(userId) {
+    var adminUser = Meteor.users.findOne({username: "admin"});
+    return (userId && adminUser && userId === adminUser._id);
+}
+
+Meteor.users.allow({
+	remove: function(userId,doc){		//Solo el administrador puede eliminar cuentas de jugadores.
+		return adminUser(userId);
+	},
+	update: function(userId,doc){		
+		return Meteor.userId();
+	}
+});
+
+
+Meteor.methods({
+    matchFinish: function (game, points) {
+	if (this.userId)
+	    Scores.insert ({user_id: this.userId, 
+			     time_end: Date.now(),
+			     points: points,
+			     game_id: game
+			    });
+    }
+});
+
+
 
 /*******************************************************************************
  *  Inicializacion del juego

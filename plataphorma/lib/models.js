@@ -1,3 +1,3 @@
 Messages = new Meteor.Collection('messages');
-Parties = new Meteor.Collection('party');
+Scores = new Meteor.Collection('scores');
 Games = new Meteor.Collection('games');
