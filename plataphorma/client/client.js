@@ -82,6 +82,16 @@ Template.PrincipalGames.events = {
       var game = Games.findOne({name:"FrootWars"});
       Session.set("current_game", game._id);
     },
+    'click #Carcassone': function () {
+      var game = Games.findOne({name:"Carcassone"});
+      $("#minigames").slideUp("slow")
+      $("#principal").slideUp("slow")
+      $("#myCarousel").hide("slow")
+      $("#container").hide();
+      $("#gamecontainer").hide();
+      $("#ranking").slideDown("slow");
+      Session.set("current_game", game._id);
+    },
 }
 
 

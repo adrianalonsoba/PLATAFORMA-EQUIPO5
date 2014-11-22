@@ -38,6 +38,7 @@ Meteor.users.allow({
 	}
 });
 
+//Insertar puntuación al acabar un juego
 
 Meteor.methods({
     matchFinish: function (game, points) {

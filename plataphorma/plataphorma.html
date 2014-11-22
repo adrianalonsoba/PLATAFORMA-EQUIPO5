@@ -232,11 +232,9 @@
                             <ul class="list-unstyled" style="overflow: scroll; height: 200px">
                                 {{#each MiniRanking}}
                                     
-                                    
                                     <strong>{{name}}</strong>: {{points}}
                                     <hr>
                                        
-                                   
                                 {{/each}}
                             </ul>
                         </div>
@@ -340,16 +338,10 @@
                         <a href="portfolio-item.html">By Victories</a>
                     </h3>
                     <ul class="list-unstyled">
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
+                        {{#each MiniRanking}}
+                            <strong>{{name}}</strong>: {{points}}
+                            <hr>
+                        {{/each}}
                      </ul>
                 </div>
             </div>
@@ -359,17 +351,11 @@
                         <a href="portfolio-item.html">By Points</a>
                     </h3>
                    <ul class="list-unstyled">
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                    <li><a href="#">Jugador</a>
-                                    </li>
-                                </ul>
+                        {{#each MiniRanking}}
+                            <strong>{{name}}</strong>: {{points}}
+                            <hr>
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>
