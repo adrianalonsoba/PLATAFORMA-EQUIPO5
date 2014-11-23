@@ -335,11 +335,11 @@
             <div class="col-md-6 img-portfolio">
                 <div class="well">
                     <h3>
-                        <a href="portfolio-item.html">By Victories</a>
+                        <a href="#">By Victories</a>
                     </h3>
                     <ul class="list-unstyled">
-                        {{#each MiniRanking}}
-                            <strong>{{name}}</strong>: {{points}}
+                        {{#each ByVictories}}
+                            <strong>{{name}}</strong> Victorias: {{victories}} Derrotas: {{derrotas}}
                             <hr>
                         {{/each}}
                      </ul>
@@ -348,10 +348,10 @@
             <div class="col-md-6 img-portfolio">
                 <div class="well">
                     <h3>
-                        <a href="portfolio-item.html">By Points</a>
+                        <a href="#">By Points</a>
                     </h3>
                    <ul class="list-unstyled">
-                        {{#each MiniRanking}}
+                        {{#each ByPoints}}
                             <strong>{{name}}</strong>: {{points}}
                             <hr>
                         {{/each}}

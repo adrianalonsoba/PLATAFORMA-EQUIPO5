@@ -7,6 +7,11 @@ Meteor.publish("all_games", function () {
     return Games.find();
 });
 
+Meteor.publish("all_players", function () {
+    // publish every field of every game
+    return Players.find();
+});
+
 Meteor.publish("current_scores", function(current_game){
     var filtro;
 
@@ -62,6 +67,13 @@ Meteor.startup(function() {
 		Games.insert({name: "Carcassone",banner: "http://domneuve.com/img/Carcassone%20banner.jpg",tutorial:"¡Conviertete en el mas poderoso señor feudal de todos los reinos existentes! Comanda a tus caballeros, apoya el poder del clero y contrata a mercenarios y bandidos para que hagan el trabajo sucio."});
 		Games.insert({name: "AlienInvasion",banner: "http://ccchuntersville.com/wp-content/uploads/2012/04/Aliens-Banner.jpg",tutorial:"Emocionante juego de naves espaciales. Se el piloto de la nave Karsis y embarcate en la defensa del sistema solar contra la amenaza de Andromeda. El futuro de la raza humana esta en tus manos"});
 		Games.insert({name: "FrootWars",banner: "http://www.viralvideopalace.com/wp-content/uploads/mvbthumbs/img_14457_annoying-orange-monster-burger.jpg",tutorial:"¡La batalla ha comenzado! Comida hipercalorífica contra fruta sana... nunca antes en la historia se había visto una batalla tan sangrienta... . Gore en estado puro."});
+
+
+		Players.insert({name:"Pepe",points:8,victories:5,derrotas:2,abandonos:0});
+		Players.insert({name:"Antonio",points:14,victories:7,derrotas:0,abandonos:0});
+		Players.insert({name:"Manolo",points:20,victories:10,derrotas:0,abandonos:0});
+		Players.insert({name:"Jesulin",points:40,victories:30,derrotas:20,abandonos:0});
+		Players.insert({name:"Carmensita",points:0,victories:10,derrotas:20,abandonos:0});
 
 	};
 });

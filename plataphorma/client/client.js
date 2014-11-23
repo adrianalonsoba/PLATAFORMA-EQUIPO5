@@ -3,7 +3,7 @@
 
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
-
+Meteor.subscribe("all_players");
 //Zona reactiva para las puntuaciones y los mensajes
 Tracker.autorun(function(){
     var current_game = Session.get("current_game");
@@ -53,7 +53,6 @@ Template.MiniGames.MiniRanking=function(){
     var matches =  Scores.find({}, {limit:4, sort: {points:-1}});
 
     var users_data = [];
-
     matches.forEach (function (m) {
         var user = Meteor.users.findOne({_id: m.user_id});
         if (user){
@@ -64,6 +63,32 @@ Template.MiniGames.MiniRanking=function(){
     return users_data;
 }
 
+Template.Ranking.ByVictories=function(){
+      var us= Players.find({}, {limit:4, sort: {victories:-1,derrotas:1}});
+      var users_data = [];
+
+      us.forEach (function (m) {
+ 
+        users_data.push({name: m.name, victories: m.victories, derrotas: m.derrotas});
+        
+      });
+
+    return users_data;
+}
+
+
+Template.Ranking.ByPoints=function(){
+      var us= Players.find({}, {limit:4, sort: {points:-1}});
+      var users_data = [];
+
+      us.forEach (function (m) {
+ 
+        users_data.push({name: m.name, points: m.points});
+        
+      });
+
+    return users_data;
+}
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
     	$("#principal").slideUp("slow")
