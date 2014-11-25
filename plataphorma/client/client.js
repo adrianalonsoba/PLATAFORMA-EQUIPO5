@@ -22,6 +22,7 @@ Meteor.startup(function() {
    $("#container").hide();
    $("#gamecontainer").hide();
    $("#ranking").hide();
+   $("#crs").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")

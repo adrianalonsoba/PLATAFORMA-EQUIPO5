@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Modern Business - Start Bootstrap Template</title>
+    <title>Plataforma Equipo 5</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -49,10 +49,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="#" id="home">Home</a>
                     </li>
                     <li>
-                        <a href="services.html">Services</a>
+                        <a href="#" id="rankingButton">Ranking</a>
                     </li>
                     <li>
                         <a href="contact.html">Contact</a>
@@ -114,9 +114,9 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
 	     <div class="item active">
-                <div class="fill" style="background-image:url('http://corsair-project.eu/wp-content/uploads/2013/09/logoURJC.jpg');"></div>
+                <div class="fill" style="background-image:url('http://www.fcjs.urjc.es/paginas/alumnos/URJC/Imagenes/LogoURJC-Alumnos.gif');"></div>
                 <div class="carousel-caption">
-                    <h2>URJC</h2>
+                    <h2>Ingeniería de sistemas de información</h2>
                 </div>
             </div>
             {{> BannerGames}}
@@ -134,14 +134,31 @@
     <!-- Page Content -->
     <div class="container">
 
-<!-- ____________PORTADA, ACCESO A LOS JUEGOS __________________-->
+<!-- _____________________PORTADA, ACCESO A LOS JUEGOS __________________-->
         <!-- Marketing Icons Section -->
         <div class="row" id="principal">
             {{> PrincipalGames}}
         </div>
         <!-- /.row -->
+<!--_____________________________________  MINIGAMES  _______________________________________-->
+        <!-- Content Row -->
+        <div class="row" id="minigames">
 
-        
+            {{>MiniGames}}
+
+        </div>
+
+<!--______________________________________ CARCASSONE _____________________________________-->
+		<!-- Content Row -->
+		<div class="row" id="carcassone">
+			{{>Carcassone}}
+		</div>
+
+<!--_____________________________________  RANKING E INFO PERSONAL ____________________________ -->
+<div class="row" id="ranking">
+        {{>Ranking}}
+</div>
+
         <!-- Footer -->
         <footer>
             <div class="row">
@@ -157,7 +174,7 @@
 
 
 
- <!--*********************************** TEMPLATE PRINCIPAL PARA JUEGOS (PORTADA DE LA APP) *********************************-->
+ <!--*********************************** TEMPLATES *********************************-->
 <template name="PrincipalGames">
     {{#each games}}
 	    <div class="col-md-4">
@@ -174,6 +191,7 @@
     {{/each}}
 </template>
 
+<!--_________Template para el banner________-->
 <template name="BannerGames">
     {{#each games}}
 	    <div class="item">
@@ -183,4 +201,256 @@
                 </div>
             </div>
     {{/each}}
+</template>
+<!--_________Template para minijuegos________-->
+<template name="MiniGames">
+
+    <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{game}}
+                    </h1>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <!-- Preview Image -->
+                  <div id='container'>
+                    {{> alien_invasion}}      
+                  </div>
+                  <div id="gamecontainer">
+                    {{> froot_wars}}      
+                  </div>
+
+                <hr>
+
+                 Tutorial
+                <hr>
+
+            </div>
+
+            <!-- Blog Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+                <div class="well">
+                    <h4>Ranking</h4>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled" style="overflow: scroll; height: 200px">
+                                {{#each MiniRanking}}
+                                    
+                                    <strong>{{name}}</strong>: {{points}}
+                                    <hr>
+                                       
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+                <!-- Blog Search Well -->
+                <div class="well">
+                    <div class="row">
+                        <div class="span2">
+                            {{> chat}}
+                        </div> 
+                    </div> 
+                </div>
+
+                <!-- Side Widget Well -->
+                <div class="well">
+                    <ul class="list-unstyled" style="overflow: scroll; height: 300px">
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                                <li><a href="#">Jugador</a>
+                                </li>
+                            </ul>
+                </div>
+
+            </div>
+
+</template>
+<!--_________Template para Carcassone________-->
+<template name="Carcassone">
+	    <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{{game}}
+                    </h1>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <!-- Preview Image -->
+                  <div id='gcontainer'>
+                    {{> carcassone}}      
+                  </div>
+                <hr>
+                 Tutorial
+                <hr>
+
+            </div>
+</template>
+<!--_________Template para Carcassone_________-->
+<template name="carcassone">
+  <canvas  id="gamec" width='320' height='480'></canvas>
+</template>
+<!--_________Template para Alien Invasion________-->
+<template name="alien_invasion">
+  <canvas id='game' width='320' height='480'></canvas>
+</template>
+<!--_________Template para froot wars________-->
+<template name="froot_wars">
+  <canvas id="gamecanvas" width="640" height="480" class="gamelayer">
+  </canvas>
+  
+  <div id="scorescreen" class="gamelayer">
+    <img id="togglemusic" src="images/icons/sound.png" onclick="game.toggleBackgroundMusic();">
+    <img src="images/icons/prev.png" onclick="game.restartLevel();">
+    <span id="score">Score: 0</span>
+  </div>
+  
+  <div id="gamestartscreen" class="gamelayer">
+    <img src="images/icons/play.png" alt="Play Game" onclick = "game.showLevelScreen();"><br>
+    <img src="images/icons/settings.png" alt="Settings">
+  </div>
+  
+  <div id="levelselectscreen" class="gamelayer">
+  </div>
+  
+  <div id="loadingscreen" class="gamelayer">
+    <div id="loadingmessage"></div>
+  </div>
+  
+  <div id="endingscreen" class="gamelayer">
+    <div>
+      <p id="endingmessage">The Level Is Over Message</p>
+      <p id="playcurrentlevel" onclick="game.restartLevel();"><img src="images/icons/prev.png"> Replay Current Level</p>
+      <p id="playnextlevel" onclick="game.startNextLevel();"><img src="images/icons/next.png"> Play Next Level </p> 
+      
+      <p id="returntolevelscreen" onclick="game.showLevelScreen();"><img src="images/icons/return.png"> Return to Level Screen</p>
+    </div>
+  </div>
+  
+</template>
+
+<!--____________Template para el ranking ___________-->
+
+<template name="Ranking">
+  <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Ranking
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Projects Row -->
+        <div class="row">
+            <div class="col-md-6 img-portfolio">
+                <div class="well">
+                    <h3>
+                        <a href="#">By Victories</a>
+                    </h3>
+                    <ul class="list-unstyled">
+                        {{#each ByVictories}}
+                            <strong>{{name}}</strong> Victorias: {{victories}} Derrotas: {{derrotas}}
+                            <hr>
+                        {{/each}}
+                     </ul>
+                </div>
+            </div>
+            <div class="col-md-6 img-portfolio">
+                <div class="well">
+                    <h3>
+                        <a href="#">By Points</a>
+                    </h3>
+                   <ul class="list-unstyled">
+                        {{#each ByPoints}}
+                            <strong>{{name}}</strong>: {{points}}
+                            <hr>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Projects Row -->
+        <div class="row">
+            <div class="well">
+                <div class="col-lg-12">
+                    <h3 class="page-header">[FOTACA!] Personal info</h3>
+                </div>
+
+                <p>Posicion: [POSICIONACA!]</p>
+                <p>Ratio: [Ganadas/Perdidas]</p>
+                <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Mis partidas</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <li><a href="#">Partida</a>
+                                    </li>
+                                <li><a href="#">Partida</a>
+                                    </li>
+                                 <li><a href="#">Partida</a>
+                                    </li>
+                            </div>
+                        </div>
+                 </div>
+                 <h3 class="page-header">PUNTOS:</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+</template>
+
+
+<template name="chat">
+  {{#if none }}
+  <h3> Chat Plataphorma </h3>
+  {{else}}
+  <h3> Chat {{gameName}} </h3>
+  {{/if}}
+  
+  {{> input    }}
+  {{> messages }}
+</template>
+
+<template name="input">
+  <p>Message: <input type="text" id="message"></p>
+
+  
+  <div class="alert fade in" id="login-error" style="display:none;">
+    <button type="button" class="close">x</button>
+    You must be signed in to post messages.
+  </div>
+
+</template>
+
+<template name="messages">
+  <table id="rooms" class="table table-striped">  
+    <tbody>
+      {{#each messages}}
+      <tr>
+    <td><strong>{{name}}:</strong></td>
+    <td>{{message}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </template>
