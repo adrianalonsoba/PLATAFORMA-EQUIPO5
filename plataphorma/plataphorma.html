@@ -244,13 +244,11 @@
 
                 <!-- Blog Search Well -->
                 <div class="well">
-                    <h4>Chat</h4>
-                    <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                        </span>
-                    </div>
-                    <!-- /.input-group -->
+                    <div class="row">
+                        <div class="span2">
+                            {{> chat}}
+                        </div> 
+                    </div> 
                 </div>
 
                 <!-- Side Widget Well -->
@@ -392,3 +390,38 @@
         <!-- /.row -->
 </template>
 
+
+<template name="chat">
+  {{#if none }}
+  <h3> Chat Plataphorma </h3>
+  {{else}}
+  <h3> Chat {{gameName}} </h3>
+  {{/if}}
+  
+  {{> input    }}
+  {{> messages }}
+</template>
+
+<template name="input">
+  <p>Message: <input type="text" id="message"></p>
+
+  
+  <div class="alert fade in" id="login-error" style="display:none;">
+    <button type="button" class="close">x</button>
+    You must be signed in to post messages.
+  </div>
+
+</template>
+
+<template name="messages">
+  <table id="rooms" class="table table-striped">  
+    <tbody>
+      {{#each messages}}
+      <tr>
+    <td><strong>{{name}}:</strong></td>
+    <td>{{message}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>

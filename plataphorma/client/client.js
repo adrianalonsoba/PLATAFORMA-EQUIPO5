@@ -8,6 +8,7 @@ Meteor.subscribe("all_players");
 Tracker.autorun(function(){
     var current_game = Session.get("current_game");
     Meteor.subscribe("current_scores", current_game);
+    Meteor.subscribe("messages_current_game", current_game);
 });
 
 /*******************************************************************************
@@ -39,6 +40,12 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
    })
+
+    $(document).on("click", ".alert .close", function(e) {
+        $(this).parent().hide();
+    });
+
+
 });
 
 Template.PrincipalGames.games = function (){
@@ -89,6 +96,56 @@ Template.Ranking.ByPoints=function(){
 
     return users_data;
 }
+
+/*
+var currentUser = null;
+Tracker.autorun(function(){
+    console.log("current user: " + currentUser);
+    currentUser = Meteor.userId();
+    console.log("current user: " + currentUser);
+});
+*/
+
+Template.messages.messages = function () {
+
+    var messagesColl =  Messages.find({}, { sort: { time: -1 }});
+    var messages = [];
+
+    messagesColl.forEach(function(m){
+        var userName = Meteor.users.findOne(m.user_id).username;
+        messages.push({name: userName , message: m.message});
+    });
+
+    return messages;
+}
+
+
+
+Template.input.events = {
+    'keydown input#message' : function (event) {
+        if (event.which == 13) {
+            if (Meteor.userId()){
+                var user_id = Meteor.user()._id;
+                var message = $('#message');
+                if (message.value != '') {
+                    Messages.insert({
+                        user_id: user_id,
+                        message: message.val(),
+                        time: Date.now(),
+                        game_id: Session.get("current_game")
+                    });
+                    message.val('')
+                }
+            }
+            else {
+                $("#login-error").show();
+            }
+        }
+    } 
+}
+
+
+
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
     	$("#principal").slideUp("slow")

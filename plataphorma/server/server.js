@@ -12,6 +12,8 @@ Meteor.publish("all_players", function () {
     return Players.find();
 });
 
+
+
 Meteor.publish("current_scores", function(current_game){
     var filtro;
 
@@ -26,6 +28,13 @@ Meteor.publish("current_scores", function(current_game){
     
 });
 
+Meteor.publish("messages_current_game", function (current_game) {
+
+    return Messages.find({game_id: current_game}, 
+			 {limit:10, sort: {time:-1}});
+    
+});
+
 
 
 //Definición de permisos de usuarios que intentan tocar dentro de la colección users.
@@ -33,6 +42,19 @@ function adminUser(userId) {
     var adminUser = Meteor.users.findOne({username: "admin"});
     return (userId && adminUser && userId === adminUser._id);
 }
+
+Messages.allow({
+    insert: function(userId, doc){
+
+	return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+	return adminUser(userId);
+    }
+});
+
+
 
 Meteor.users.allow({
 	remove: function(userId,doc){		//Solo el administrador puede eliminar cuentas de jugadores.
