@@ -1,4 +1,4 @@
-
+var currentUser = null;
 
 
 // Nos suscribimos al catalogo de juegos
@@ -32,6 +32,14 @@ Meteor.startup(function() {
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
    })
+   //el boton del ranking solo debe ser visible si estas logueado
+   
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
+   
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
@@ -99,14 +107,16 @@ Template.Ranking.ByPoints=function(){
     return users_data;
 }
 
-/*
-var currentUser = null;
+
 Tracker.autorun(function(){
-    console.log("current user: " + currentUser);
     currentUser = Meteor.userId();
-    console.log("current user: " + currentUser);
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
 });
-*/
+
 
 Template.messages.messages = function () {
 
