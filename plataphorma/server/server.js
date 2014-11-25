@@ -31,7 +31,7 @@ Meteor.publish("current_scores", function(current_game){
 Meteor.publish("messages_current_game", function (current_game) {
 
     return Messages.find({game_id: current_game}, 
-			 {limit:10, sort: {time:-1}});
+			 {limit:5, sort: {time:-1}});
     
 });
 
