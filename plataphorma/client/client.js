@@ -23,6 +23,8 @@ Meteor.startup(function() {
    $("#gamecontainer").hide();
    $("#ranking").hide();
    $("#crs").hide();
+   $("#inicrs").hide();
+   $("#crearpartida").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
@@ -43,12 +45,12 @@ Meteor.startup(function() {
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
-      $("#ranking").slideUp("slow")
+        $("#ranking").slideUp("slow")
    		$("#myCarousel").show("slow")
    		$("#principal").slideDown("slow")
-      $("#container").hide();
-      $("#gamecontainer").hide();
-	  $("#crs").hide();
+        $("#container").hide();
+        $("#gamecontainer").hide();
+	    $("#crs").hide();
    })
 
     $(document).on("click", ".alert .close", function(e) {
