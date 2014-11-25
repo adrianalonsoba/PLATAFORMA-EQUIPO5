@@ -40,6 +40,7 @@ Meteor.startup(function() {
    		$("#principal").slideDown("slow")
       $("#container").hide();
       $("#gamecontainer").hide();
+	  $("#crs").hide();
    })
 
     $(document).on("click", ".alert .close", function(e) {
@@ -170,9 +171,7 @@ Template.PrincipalGames.events = {
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
-      $("#container").hide();
-      $("#gamecontainer").hide();
-      $("#ranking").slideDown("slow");
+	  $("#crs").show();
       Session.set("current_game", game._id);
     },
 }
