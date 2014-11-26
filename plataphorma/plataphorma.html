@@ -302,14 +302,16 @@
 </template>
 <!--____________Template crear partida________-->
 <template name="crearpartida">
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
-			<p>Partida:<input type="text" id="namePartida"></p>
-			<p>Jugadores:<input type="number" id="Jugadores"></p>
-			<p>IA:<input type="number" id="ia"></p>
-			<div class="col-md-4">
-				<a href="#" class="btn btn-default" id="aceptar">Aceptar</a>
-			</div>
-	</div>
+    <form>
+    	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+    			<p>Partida:<input type="text" placeholder="Introduce nombre partida" id="namePartida"></p>
+    			<p>Jugadores:<input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
+    			<p>IA:<input type="number" placeholder="Introduce nº IA" id="ia"></p>
+    			
+    			<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
+    			
+    	</div>
+    </form>
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">

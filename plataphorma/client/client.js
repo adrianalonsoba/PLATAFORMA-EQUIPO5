@@ -173,7 +173,41 @@ Template.input.events = {
     } 
 }
 
+Template.crearpartida.events = {
+    'submit': function (e, tmpl) {
+        // Prevengo la acción por defecto (submit)
+        e.preventDefault();
+        
+        if (Meteor.userId()){
 
+          var nombrePartida = tmpl.find('#namePartida').value;
+          var numeroJugadores = tmpl.find('#Jugadores').value;
+          var numeroIA = tmpl.find('#ia').value;
+          var jugador = Meteor.user().username;
+
+          console.log(nombrePartida);
+          console.log(numeroJugadores);
+          console.log(numeroIA);
+          console.log(jugador);
+
+          if ((numeroJugadores<0)||(numeroIA)<0){
+            alert("Campos incorrectos, los numeros deben ser positivos");
+          }else{
+            Rooms.insert({
+              nombreHost: jugador,
+              numJugadores: numeroJugadores,
+              tiempoCreada: Date.now(),
+              miembrosSala: 0
+            });
+            tmpl.find('#namePartida').value="";
+            tmpl.find('#Jugadores').value="";
+            tmpl.find('#ia').value="";
+          }
+        }else{
+          alert("Debes estar logeado para crear una partida");
+        }
+    } 
+}; 
 
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
