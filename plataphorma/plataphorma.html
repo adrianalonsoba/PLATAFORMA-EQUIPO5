@@ -273,12 +273,22 @@
                 <!-- Preview Image -->
                   <div id='gcontainer'>
                     {{> inicrs}}
-					{{> crearpartida}}  
-                  </div>
+				  </div>
+       		<div class="row">
+		        <div class="col-md-6">
+					<div class="well">
+						{{> crearpartida}} 
+		            </div>
+		     	</div>
+		        <div class="col-md-6">
+		            <div class="well">
+						{{> unirspartida}}
+		            </div>
+		        </div>
                 <hr>
                  Tutorial
                 <hr>
-
+			</div>
             </div>
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
@@ -292,7 +302,8 @@
 </template>
 <!--____________Template crear partida________-->
 <template name="crearpartida">
-	<div class="jumbotron" style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 1150px;">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+			<p>Partida:<input type="text" id="namePartida"></p>
 			<p>Jugadores:<input type="number" id="Jugadores"></p>
 			<p>IA:<input type="number" id="ia"></p>
 			<div class="col-md-4">
@@ -302,8 +313,18 @@
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">
-	
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+		<div class="col-md-4">
+            <li><a href="#">Partida</a>
+                </li>
+            <li><a href="#">Partida</a>
+                </li>
+             <li><a href="#">Partida</a>
+                </li>
+		</div>
+	</div>
 </template>
+
 <!--_________Template para Carcassone_________-->
 <template name="carcassone">
   <canvas  id="gamec" width='320' height='480'></canvas>
