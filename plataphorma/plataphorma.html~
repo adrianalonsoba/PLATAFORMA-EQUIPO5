@@ -150,7 +150,7 @@
 
 <!--______________________________________ CARCASSONE _____________________________________-->
 		<!-- Content Row -->
-		<div class="row" id="carcassone">
+		<div class="row" id="crs">
 			{{>Carcassone}}
 		</div>
 
@@ -249,36 +249,12 @@
                 </div>
 
                 <!-- Blog Search Well -->
-                <div class="well">
+                <div class="well" style="overflow: scroll; height: 300px">
                     <div class="row">
                         <div class="span2">
                             {{> chat}}
                         </div> 
                     </div> 
-                </div>
-
-                <!-- Side Widget Well -->
-                <div class="well">
-                    <ul class="list-unstyled" style="overflow: scroll; height: 300px">
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                                <li><a href="#">Jugador</a>
-                                </li>
-                            </ul>
                 </div>
 
             </div>
@@ -295,14 +271,59 @@
             <div class="col-lg-8">
                 <!-- Preview Image -->
                   <div id='gcontainer'>
-                    {{> carcassone}}      
-                  </div>
+                    {{> inicrs}}
+				  </div>
+       		<div class="row">
+		        <div class="col-md-6">
+					<div class="well">
+						{{> crearpartida}} 
+		            </div>
+		     	</div>
+		        <div class="col-md-6">
+		            <div class="well">
+						{{> unirspartida}}
+		            </div>
+		        </div>
                 <hr>
                  Tutorial
                 <hr>
 
             </div>
 </template>
+<!--___________Template pagina inicial Carcassone_________-->
+<template name="inicrs">
+	<!--div class="fill" style="background-image:url('/home/alberto/Escritorio/Fondo_inicial.jpg');"></div-->
+		<div class="jumbotron" style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 1150px;">
+			<a href="#" class="btn btn-default" id="createPartida" >Crear partida</a>
+			<a href="#" class="btn btn-default" id="unirsePartida">Unirse a partida</a>
+		</div>
+	<!--/div-->
+</template>
+<!--____________Template crear partida________-->
+<template name="crearpartida">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+			<p>Partida:<input type="text" id="namePartida"></p>
+			<p>Jugadores:<input type="number" id="Jugadores"></p>
+			<p>IA:<input type="number" id="ia"></p>
+			<div class="col-md-4">
+				<a href="#" class="btn btn-default" id="aceptar">Aceptar</a>
+			</div>
+	</div>
+</template>
+<!--____________Template unirse partida_______-->
+<template name="unirspartida">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+		<div class="col-md-4">
+            <li><a href="#">Partida</a>
+                </li>
+            <li><a href="#">Partida</a>
+                </li>
+             <li><a href="#">Partida</a>
+                </li>
+		</div>
+	</div>
+</template>
+
 <!--_________Template para Carcassone_________-->
 <template name="carcassone">
   <canvas  id="gamec" width='320' height='480'></canvas>
