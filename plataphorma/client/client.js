@@ -68,6 +68,21 @@ Template.BannerGames.games = function (){
     return Games.find();
 }
 
+
+Template.MiniGames.game=function(){
+	game_id= Session.get("current_game")
+	var game = Games.findOne({_id:game_id});
+	return game.name
+	
+}
+
+Template.MiniGames.tutorial=function(){
+	game_id= Session.get("current_game")
+	var game = Games.findOne({_id:game_id});
+	return game.tutorial
+	
+}
+
 Template.MiniGames.MiniRanking=function(){
     var matches =  Scores.find({}, {limit:4, sort: {points:-1}});
 

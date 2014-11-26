@@ -1,4 +1,4 @@
-
+var currentUser = null;
 
 
 // Nos suscribimos al catalogo de juegos
@@ -22,6 +22,9 @@ Meteor.startup(function() {
    $("#container").hide();
    $("#gamecontainer").hide();
    $("#ranking").hide();
+   $("#crs").hide();
+   $("#inicrs").hide();
+   $("#crearpartida").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
@@ -31,14 +34,23 @@ Meteor.startup(function() {
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
    })
+   //el boton del ranking solo debe ser visible si estas logueado
+   
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
+   
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
-      $("#ranking").slideUp("slow")
+        $("#ranking").slideUp("slow")
    		$("#myCarousel").show("slow")
    		$("#principal").slideDown("slow")
-      $("#container").hide();
-      $("#gamecontainer").hide();
+        $("#container").hide();
+        $("#gamecontainer").hide();
+	    $("#crs").hide();
    })
 
     $(document).on("click", ".alert .close", function(e) {
@@ -54,6 +66,21 @@ Template.PrincipalGames.games = function (){
 
 Template.BannerGames.games = function (){
     return Games.find();
+}
+
+//AQUIIIIII!!!!
+Template.MiniGames.game=function(){
+	game_id= Session.get("current_game")
+	var game = Games.findOne({_id:game_id});
+	return game.name
+	
+}
+
+Template.MiniGames.tutorial=function(){
+	game_id= Session.get("current_game")
+	var game = Games.findOne({_id:game_id});
+	return game.tutorial
+	
 }
 
 Template.MiniGames.MiniRanking=function(){
@@ -97,14 +124,16 @@ Template.Ranking.ByPoints=function(){
     return users_data;
 }
 
-/*
-var currentUser = null;
+
 Tracker.autorun(function(){
-    console.log("current user: " + currentUser);
     currentUser = Meteor.userId();
-    console.log("current user: " + currentUser);
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
 });
-*/
+
 
 Template.messages.messages = function () {
 
@@ -169,9 +198,7 @@ Template.PrincipalGames.events = {
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
-      $("#container").hide();
-      $("#gamecontainer").hide();
-      $("#ranking").slideDown("slow");
+	  $("#crs").show();
       Session.set("current_game", game._id);
     },
 }
