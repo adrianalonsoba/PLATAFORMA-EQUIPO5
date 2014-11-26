@@ -40,6 +40,8 @@ Meteor.startup(function() {
    $("#crs").hide();
    $("#inicrs").hide();
    $("#crearpartida").hide();
+   $("#contact").hide();
+   $("#mapa").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
@@ -48,6 +50,16 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
+   })
+   $("#contactButton").click(function(){
+      $("#minigames").slideUp("slow")
+      $("#principal").slideUp("slow")
+      $("#myCarousel").hide("slow")
+      $("#container").hide();
+      $("#gamecontainer").hide();
+      $("#ranking").slideUp("slow");
+      $("#contact").show();
+      $("#mapa").show();
    })
    //el boton del ranking solo debe ser visible si estas logueado
    
@@ -60,11 +72,12 @@ Meteor.startup(function() {
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
-        $("#ranking").slideUp("slow")
+      $("#ranking").slideUp("slow")
    		$("#myCarousel").show("slow")
    		$("#principal").slideDown("slow")
-        $("#container").hide();
-        $("#gamecontainer").hide();
+      $("#container").hide();
+      $("#gamecontainer").hide();
+      $("#contact").hide();
 	    $("#crs").hide();
    })
 
