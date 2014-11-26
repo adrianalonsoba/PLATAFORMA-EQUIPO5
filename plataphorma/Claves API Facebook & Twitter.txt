@@ -1,0 +1,10 @@
+FACEBOOK
+
+App ID - 747455478624725
+App Secret - 66a15cba2a7338ddc96f1d54dfe980fa
+
+
+TWITTER
+
+Consumer Key (API Key) qZQzLDlSne8FdHgwfaS90WmZ6
+Consumer Secret (API Secret) Jee0zrlaETx6m8eOwyeYW8CGVZEcyfF8Y0vddZxn0VqsAe85Kj 
