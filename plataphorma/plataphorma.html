@@ -323,7 +323,7 @@
                     {{> inicrs}}
 				  </div>
        		<div class="row">
-		        <div class="col-md-6">
+		        <div class="col-md-6" id="crpart">
 					<div class="well">
 						{{> crearpartida}} 
 		            </div>
@@ -365,7 +365,7 @@
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
 		<div class="col-md-4">
             {{#each Salas}}
                 <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})

@@ -24,7 +24,9 @@ Meteor.startup(function() {
    $("#ranking").hide();
    $("#crs").hide();
    $("#inicrs").hide();
-   $("#crearpartida").hide();
+   $("#crpart").hide();
+   $("#allSalas").hide();
+   $("#unirspartida").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
@@ -51,7 +53,19 @@ Meteor.startup(function() {
         $("#container").hide();
         $("#gamecontainer").hide();
 	    $("#crs").hide();
+		$("#crpart").hide();
+		$("#allSalas").hide();
    })
+
+    $("#createPartida").click(function(){
+		$("#crpart").show();
+	})
+
+	$("unirsePartida").click(function(){
+		$("#unirspartida").show();
+		$("#crpart").hide();
+		$("#gcontainer").hide;
+	})
 
     $(document).on("click", ".alert .close", function(e) {
         $(this).parent().hide();
