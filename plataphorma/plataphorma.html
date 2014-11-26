@@ -280,8 +280,8 @@
 						{{> crearpartida}} 
 		            </div>
 		     	</div>
-		        <div class="col-md-6">
-		            <div class="well">
+		        <div class="col-md-6" id="allSalas">
+		            <div class="well" >
 						{{> unirspartida}}
 		            </div>
 		        </div>
@@ -304,8 +304,8 @@
 <template name="crearpartida">
 	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
 			<p>Partida:<input type="text" id="namePartida"></p>
-			<p>Jugadores:<input type="number" id="Jugadores"></p>
-			<p>IA:<input type="number" id="ia"></p>
+			<p>Jugadores:<input type="number" min="0" id="Jugadores"></p>
+			<p>IA:<input type="number" min="0" id="ia"></p>
 			<div class="col-md-4">
 				<a href="#" class="btn btn-default" id="aceptar">Aceptar</a>
 			</div>
@@ -315,12 +315,11 @@
 <template name="unirspartida">
 	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
 		<div class="col-md-4">
-            <li><a href="#">Partida</a>
+            {{#each Salas}}
+                <li><strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
+                    <a value="{{id}}" class="btn btn-default" id="toPlay" >Unirse</a>
                 </li>
-            <li><a href="#">Partida</a>
-                </li>
-             <li><a href="#">Partida</a>
-                </li>
+            {{/each}}
 		</div>
 	</div>
 </template>

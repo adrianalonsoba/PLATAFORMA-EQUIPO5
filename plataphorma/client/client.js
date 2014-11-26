@@ -3,7 +3,22 @@ var currentUser = null;
 
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
+//obtenemos la lista de jugadores para los rankings
 Meteor.subscribe("all_players");
+//obtenemos la lista de salas para unirnos
+Meteor.subscribe("all_rooms");
+
+//******************************  Trackers.autorun *******************************
+
+//Zona reactiva para ver si el usuario esta logueado y mostrarle su informacion
+Tracker.autorun(function(){
+    currentUser = Meteor.userId();
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
+});
 //Zona reactiva para las puntuaciones y los mensajes
 Tracker.autorun(function(){
     var current_game = Session.get("current_game");
@@ -60,6 +75,7 @@ Meteor.startup(function() {
 
 });
 
+//Aqui se presentan todos los juegos
 Template.PrincipalGames.games = function (){
     return Games.find();
 }
@@ -68,6 +84,7 @@ Template.BannerGames.games = function (){
     return Games.find();
 }
 
+//Aqui se saca el tutorial y el nombre del juego en la seccion de minijuegos
 
 Template.MiniGames.game=function(){
 	game_id= Session.get("current_game")
@@ -83,6 +100,7 @@ Template.MiniGames.tutorial=function(){
 	
 }
 
+//Ranking de los juegos
 Template.MiniGames.MiniRanking=function(){
     var matches =  Scores.find({}, {limit:4, sort: {points:-1}});
 
@@ -124,16 +142,31 @@ Template.Ranking.ByPoints=function(){
     return users_data;
 }
 
+//Listado de salas en el servidor
 
-Tracker.autorun(function(){
-    currentUser = Meteor.userId();
-    if(currentUser==null){
-      $("#rankingButton").hide();
-    }else{
-      $("#rankingButton").show();
-    }
-});
+Template.unirspartida.Salas= function(){
+    var rom= Rooms.find({},{})
 
+    
+    var rooms_data=[];
+
+    rom.forEach(function (x){
+      rooms_data.push({host:x.host,id:x._id,jugadores:x.jugadores,ia:x.ia,dentro:x.dentro})
+    })
+    
+    return rooms_data;
+}
+
+//programacion de los botones de unirse a partida
+
+Template.unirspartida.events={
+  'click #toPlay': function () {
+      $("#allSalas").slideUp("slow");
+      alert(this.id)
+    },
+}
+
+//Programacion del chat
 
 Template.messages.messages = function () {
 
@@ -174,6 +207,7 @@ Template.input.events = {
 }
 
 
+//Programacion de los botones de la barra de la pagina principal
 
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
@@ -203,6 +237,7 @@ Template.PrincipalGames.events = {
     },
 }
 
+//REGRISTRO DE USUARIOS
 
 Accounts.ui.config({
 	passwordSignupFields:"USERNAME_AND_OPTIONAL_EMAIL"

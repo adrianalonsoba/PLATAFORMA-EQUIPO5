@@ -12,6 +12,11 @@ Meteor.publish("all_players", function () {
     return Players.find();
 });
 
+Meteor.publish("all_rooms", function () {
+    // publish every field of every game
+    return Rooms.find();
+});
+
 
 
 Meteor.publish("current_scores", function(current_game){
@@ -96,6 +101,12 @@ Meteor.startup(function() {
 		Players.insert({name:"Manolo",points:20,victories:10,derrotas:0,abandonos:0});
 		Players.insert({name:"Jesulin",points:40,victories:30,derrotas:20,abandonos:0});
 		Players.insert({name:"Carmensita",points:0,victories:10,derrotas:20,abandonos:0});
+
+		Rooms.insert({host:"Pepiño",jugadores:3,ia:1,dentro:2});
+		Rooms.insert({host:"Antonio",jugadores:3,ia:1,dentro:2});
+		Rooms.insert({host:"Manolo",jugadores:3,ia:1,dentro:2});
+		Rooms.insert({host:"Carmensita",jugadores:3,ia:1,dentro:2});
+		Rooms.insert({host:"Jesulin",jugadores:3,ia:1,dentro:2});
 
 	};
 });
