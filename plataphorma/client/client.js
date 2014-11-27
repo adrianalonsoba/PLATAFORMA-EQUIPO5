@@ -3,12 +3,28 @@ var currentUser = null;
 
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
+//Nos suscribimos al canal de los jugadores para los rankings
 Meteor.subscribe("all_players");
-//Zona reactiva para las puntuaciones y los mensajes
+//Nos suscribimos a las salas de juego para poder entrar
+Meteor.subscribe("all_rooms");
+
+/***************************** ZONA REACTIVA ***********************/
+
+//Reactivo para cambiar en el juego en el que estamos
 Tracker.autorun(function(){
     var current_game = Session.get("current_game");
     Meteor.subscribe("current_scores", current_game);
     Meteor.subscribe("messages_current_game", current_game);
+});
+
+//Reactivo para mostrar o quitar el ranking
+Tracker.autorun(function(){
+    currentUser = Meteor.userId();
+    if(currentUser==null){
+      $("#rankingButton").hide();
+    }else{
+      $("#rankingButton").show();
+    }
 });
 
 /*******************************************************************************
@@ -27,14 +43,26 @@ Meteor.startup(function() {
    $("#crpart").hide();
    $("#allSalas").hide();
    $("#unirspartida").hide();
+   $("#contact").hide();
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
+      $("#contact").slideUp("slow")
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
+   })
+   //Boton para acceder a la información de los creadores
+   $("#contactButton").click(function(){
+      $("#minigames").slideUp("slow")
+      $("#principal").slideUp("slow")
+      $("#myCarousel").hide("slow")
+      $("#ranking").slideUp("slow");
+      $("#container").hide();
+      $("#gamecontainer").hide();
+      $("#contact").show("slow");
    })
    //el boton del ranking solo debe ser visible si estas logueado
    
@@ -47,33 +75,36 @@ Meteor.startup(function() {
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
-        $("#ranking").slideUp("slow")
-   		$("#myCarousel").show("slow")
-   		$("#principal").slideDown("slow")
-        $("#container").hide();
-        $("#gamecontainer").hide();
+      $("#ranking").slideUp("slow")
+   	  $("#myCarousel").show("slow")
+   	  $("#principal").slideDown("slow")
+      $("#contact").slideUp("slow")
+      $("#container").hide();
+      $("#gamecontainer").hide();
 	    $("#crs").hide();
-		$("#crpart").hide();
-		$("#allSalas").hide();
+		  $("#crpart").hide();
+		  $("#allSalas").hide();
    })
-
-    $("#createPartida").click(function(){
+   //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
+  $("#createPartida").click(function(){
 		$("#crpart").show();
+    $("#allSalas").hide();
 	})
 
-	$("unirsePartida").click(function(){
-		$("#unirspartida").show();
+	$("#unirsePartida").click(function(){
+		$("#allSalas").show();
 		$("#crpart").hide();
 		$("#gcontainer").hide;
 	})
 
-    $(document).on("click", ".alert .close", function(e) {
-        $(this).parent().hide();
-    });
+  $(document).on("click", ".alert .close", function(e) {
+      $(this).parent().hide();
+  });
 
 
 });
 
+//Templates de presentacion de los juegos
 Template.PrincipalGames.games = function (){
     return Games.find();
 }
@@ -83,6 +114,7 @@ Template.BannerGames.games = function (){
 }
 
 
+//Templates de los minijuegos
 Template.MiniGames.game=function(){
 	game_id= Session.get("current_game")
 	var game = Games.findOne({_id:game_id});
@@ -97,6 +129,8 @@ Template.MiniGames.tutorial=function(){
 	
 }
 
+
+//Templates de todos los rankings, de los minijuegos y de la info personal
 Template.MiniGames.MiniRanking=function(){
     var matches =  Scores.find({}, {limit:4, sort: {points:-1}});
 
@@ -138,17 +172,7 @@ Template.Ranking.ByPoints=function(){
     return users_data;
 }
 
-
-Tracker.autorun(function(){
-    currentUser = Meteor.userId();
-    if(currentUser==null){
-      $("#rankingButton").hide();
-    }else{
-      $("#rankingButton").show();
-    }
-});
-
-
+//Template para los mensajes de los chats de la plataforma
 Template.messages.messages = function () {
 
     var messagesColl =  Messages.find({}, { sort: { time: -1 }});
@@ -187,6 +211,7 @@ Template.input.events = {
     } 
 }
 
+//Template para la creacion de una partida con el boton nueva partida
 Template.crearpartida.events = {
     'submit': function (e, tmpl) {
         // Prevengo la acción por defecto (submit)
@@ -223,6 +248,7 @@ Template.crearpartida.events = {
     } 
 }; 
 
+//Template para cambiar de juego
 Template.PrincipalGames.events = {
     'click #AlienInvasion': function () {
     	$("#principal").slideUp("slow")
@@ -251,7 +277,44 @@ Template.PrincipalGames.events = {
     },
 }
 
+// Templates de salas de juego
 
+//--Template para que aparezcan las salas
+Template.unirspartida.Salas= function(){
+  var rom= Rooms.find({},{})
+
+  console.log(rom)
+  var rooms_data=[];
+
+  rom.forEach(function (x){
+    rooms_data.push({host:x.host,id:x._id,jugadores:x.jugadores,ia:x.ia,dentro:x.dentro})
+  })
+  console.log(rooms_data)
+  return rooms_data;
+}
+
+//********************************* ADRIAN TE TOCA MODIFICAR AQUI PARA TU SALA DE JUEGO ************
+//el listado de salas se debe ocultar y debe aparecer la sala donde te has metido
+Template.unirspartida.events={
+    'click #toPlay': function () {
+      if (Meteor.userId()){
+          var sala= this.id
+          var jugador = Meteor.user().username;
+          JoinPlayer.insert({
+            host: sala,
+            usuario: jugador
+          });
+          //en concreto es esta parte la que hay que modificar
+        alert("SE HA AÑADIDO UN JUGADOR, AHORA LE TOCA A LA SALA")
+      }else{
+        alert("Debes estar logeado para jugar una partida");
+      }
+
+    }
+}
+
+
+//Zona de registro 
 Accounts.ui.config({
 	passwordSignupFields:"USERNAME_AND_OPTIONAL_EMAIL"
 });
