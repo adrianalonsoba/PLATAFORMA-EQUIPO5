@@ -42,8 +42,11 @@ Meteor.startup(function() {
    $("#inicrs").hide();
    $("#crpart").hide();
    $("#allSalas").hide();
+   $("allPlayers").hide();
    $("#unirspartida").hide();
+   $("#jugadrspartida").hide();
    $("#contact").hide();
+	
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
       $("#minigames").slideUp("slow")
@@ -81,20 +84,28 @@ Meteor.startup(function() {
       $("#contact").slideUp("slow")
       $("#container").hide();
       $("#gamecontainer").hide();
-	    $("#crs").hide();
-		  $("#crpart").hide();
-		  $("#allSalas").hide();
+	  $("#crs").hide();
+	  $("#crpart").hide();
+	  $("#allSalas").hide();
+	  $("#jugadrspartida").hide();
+	  $("allPlayers").hide();
    })
    //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
-		$("#crpart").show();
-    $("#allSalas").hide();
+	   $("#crpart").show();
+       $("#allSalas").hide();
+	   $("allPlayers").hide();
 	})
 
 	$("#unirsePartida").click(function(){
 		$("#allSalas").show();
 		$("#crpart").hide();
 		$("#gcontainer").hide;
+		$("allPlayers").hide();
+	})
+
+	$("#toPlayers").click(function(){
+		$("allPlayers").show();
 	})
 
   $(document).on("click", ".alert .close", function(e) {

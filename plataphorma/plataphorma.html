@@ -333,6 +333,11 @@
 						{{> unirspartida}}
 		            </div>
 		        </div>
+				<div class="col-md-6" id="allPlayers">
+		            <div class="well" >
+						{{> jugadrspartida}}
+		            </div>
+		        </div>
                 <hr>
                  Tutorial
                 <hr>
@@ -370,8 +375,22 @@
             {{#each Salas}}
                 <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
                     <a value="{{id}}" class="btn btn-default" id="toPlay" >Unirse</a>
+					<a value="{{id}}" class="btn btn-default" id="toPlayers" >Apuntados</a>
                 </li>
             {{/each}}
+		</div>
+	</div>
+</template>
+<!--____________Template jugadores en partida__________-->
+<template name="jugadrspartida">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
+		<div class="col-md-4">
+           	<li><a href="#">Jugador</a>
+                </li>
+            <li><a href="#">Jugador</a>
+                </li>
+            <li><a href="#">Jugador</a>
+                </li>
 		</div>
 	</div>
 </template>
