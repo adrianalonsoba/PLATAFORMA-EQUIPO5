@@ -88,13 +88,13 @@ Meteor.startup(function() {
 	  $("#crpart").hide();
 	  $("#allSalas").hide();
 	  $("#jugadrspartida").hide();
-	  $("allPlayers").hide();
+	  $("#allPlayers").hide();
    })
    //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
        $("#allSalas").hide();
-	   $("allPlayers").hide();
+	   $("#allPlayers").hide();
 	})
 
 	$("#unirsePartida").click(function(){
@@ -104,8 +104,8 @@ Meteor.startup(function() {
 		$("#allPlayers").hide();
 	})
 
-	$("#toPlayers").click(function(){
-		$("allPlayers").show();
+	$(".toPlayers").click(function(){
+		$("#allPlayers").show();
 	})
 
   $(document).on("click", ".alert .close", function(e) {

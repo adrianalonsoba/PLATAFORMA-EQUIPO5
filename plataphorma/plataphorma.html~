@@ -55,7 +55,7 @@
                         <a href="#" id="rankingButton">Ranking</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="#" id="contactButton">Contact</a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <b class="caret"></b></a>
@@ -154,6 +154,54 @@
 			{{>Carcassone}}
 		</div>
 
+<!-- Page Heading/Breadcrumbs -->
+    <div id="contact">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Contact
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Content Row -->
+        <div class="row">
+            <!-- Map Column -->
+            <div class="col-md-8">
+                <!-- Embedded Google Map -->
+                <iframe id="mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3043.6753227491627!2d-3.821010000000016!3d40.282962!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd418e7adf68f543%3A0x841755428455a90b!2sUniversidad+Rey+Juan+Carlos!5e0!3m2!1ses!2ses!4v1398358580808" width="100%" height="400px" frameborder="0" style="border:0"></iframe>
+            </div>
+            <!-- Contact Details Column -->
+            <div class="col-md-4">
+                <h3>Contact Details</h3>
+                <p>
+                    28943 Fuenlabrada<br>Camino del Molino<br>
+                </p>
+                <p><i class="fa fa-phone"></i> 
+                    <abbr title="Phone">Tlf</abbr>: 914 88 72 62</p>
+                <p><i class="fa fa-envelope-o"></i> 
+                    <abbr title="Email">E</abbr>: <a href="mailto:name@example.com">pheras@gmail.com</a>
+                </p>
+                <p><i class="fa fa-clock-o"></i> 
+                    <abbr title="Hours">H</abbr>: Lunes - Viernes: 9:00 AM to 22:00 PM</p>
+                <ul class="list-unstyled list-inline list-social-icons">
+                    <li>
+                        <a href="#"><i class="fa fa-facebook-square fa-2x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-google-plus-square fa-2x"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        
 <!--_____________________________________  RANKING E INFO PERSONAL ____________________________ -->
 <div class="row" id="ranking">
         {{>Ranking}}
@@ -207,7 +255,8 @@
 
     <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">{{game}}
+                    <h1 class="page-header">
+                    	{{game}}
                     </h1>
                 </div>
             </div>
@@ -272,27 +321,27 @@
                 <!-- Preview Image -->
                   <div id='gcontainer'>
                     {{> inicrs}}
-<<<<<<< HEAD
-					{{> crearpartida}}  
-                  </div>
-=======
 				  </div>
        		<div class="row">
-		        <div class="col-md-6">
+		        <div class="col-md-6" id="crpart">
 					<div class="well">
 						{{> crearpartida}} 
 		            </div>
 		     	</div>
-		        <div class="col-md-6">
-		            <div class="well">
+		        <div class="col-md-6" id="allSalas">
+		            <div class="well" >
 						{{> unirspartida}}
 		            </div>
 		        </div>
->>>>>>> pruebas
+				<div class="col-md-6" id="allPlayers">
+		            <div class="well" >
+						{{> jugadrspartida}}
+		            </div>
+		        </div>
                 <hr>
                  Tutorial
                 <hr>
-
+			</div>
             </div>
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
@@ -306,38 +355,46 @@
 </template>
 <!--____________Template crear partida________-->
 <template name="crearpartida">
-<<<<<<< HEAD
-	<div class="jumbotron" style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 1150px;">
-=======
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
-			<p>Partida:<input type="text" id="namePartida"></p>
->>>>>>> pruebas
-			<p>Jugadores:<input type="number" id="Jugadores"></p>
-			<p>IA:<input type="number" id="ia"></p>
-			<div class="col-md-4">
-				<a href="#" class="btn btn-default" id="aceptar">Aceptar</a>
-			</div>
-	</div>
+
+    <form>
+    	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+    			<p>Partida:<input type="text" placeholder="Introduce nombre partida" id="namePartida"></p>
+    			<p>Jugadores:<input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
+    			<p>IA:<input type="number" placeholder="Introduce nº IA" id="ia"></p>
+    			
+    			<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
+    			
+    	</div>
+    </form>
+
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">
-<<<<<<< HEAD
-	
-</template>
-=======
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
 		<div class="col-md-4">
-            <li><a href="#">Partida</a>
+            {{#each Salas}}
+                <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
+                    <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
+					<a value="{{id}}" class="btn btn-default" id="toPlayers"  href="#">Apuntados</a>
                 </li>
-            <li><a href="#">Partida</a>
+            {{/each}}
+		</div>
+	</div>
+</template>
+<!--____________Template jugadores en partida__________-->
+<template name="jugadrspartida">
+	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
+		<div class="col-md-4">
+           	<li><a href="#">Jugador</a>
                 </li>
-             <li><a href="#">Partida</a>
+            <li><a href="#">Jugador</a>
+                </li>
+            <li><a href="#">Jugador</a>
                 </li>
 		</div>
 	</div>
 </template>
 
->>>>>>> pruebas
 <!--_________Template para Carcassone_________-->
 <template name="carcassone">
   <canvas  id="gamec" width='320' height='480'></canvas>
