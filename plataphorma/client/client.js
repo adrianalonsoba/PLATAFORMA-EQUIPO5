@@ -42,7 +42,7 @@ Meteor.startup(function() {
    $("#inicrs").hide();
    $("#crpart").hide();
    $("#allSalas").hide();
-   $("allPlayers").hide();
+   $("#allPlayers").hide();
    $("#unirspartida").hide();
    $("#jugadrspartida").hide();
    $("#contact").hide();
@@ -100,8 +100,8 @@ Meteor.startup(function() {
 	$("#unirsePartida").click(function(){
 		$("#allSalas").show();
 		$("#crpart").hide();
-		$("#gcontainer").hide;
-		$("allPlayers").hide();
+		//$("#gcontainer").hide();
+		$("#allPlayers").hide();
 	})
 
 	$("#toPlayers").click(function(){
