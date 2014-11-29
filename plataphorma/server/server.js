@@ -17,6 +17,11 @@ Meteor.publish("all_rooms", function () {
     return Rooms.find();
 });
 
+Meteor.publish("all_joinPlayers", function () {
+    // publish every field of every game
+    return JoinPlayer.find();
+});
+
 
 
 Meteor.publish("current_scores", function(current_game){
@@ -58,6 +63,18 @@ Messages.allow({
 	return adminUser(userId);
     }
 });
+
+JoinPlayer.allow({
+    insert: function(userId, doc){
+
+	return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+	return adminUser(userId);
+    }
+});
+
 
 
 

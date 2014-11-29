@@ -375,7 +375,7 @@
             {{#each Salas}}
                 <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
                     <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
-					<a value="{{id}}" class="btn btn-default toPlayers"  href="#">Apuntados</a>
+					<a value="{{id}}" class="btn btn-default" id="toPlayers">Apuntados</a>
                 </li>
             {{/each}}
 		</div>
@@ -385,12 +385,9 @@
 <template name="jugadrspartida">
 	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
 		<div class="col-md-4">
-           	<li><a href="#">Jugador</a>
-                </li>
-            <li><a href="#">Jugador</a>
-                </li>
-            <li><a href="#">Jugador</a>
-                </li>
+        {{#each Jugador}}
+            <strong>{{nombre}}</strong>
+        {{/each}}
 		</div>
 	</div>
 </template>

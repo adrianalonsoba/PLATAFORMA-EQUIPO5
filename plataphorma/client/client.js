@@ -7,6 +7,8 @@ Meteor.subscribe("all_games");
 Meteor.subscribe("all_players");
 //Nos suscribimos a las salas de juego para poder entrar
 Meteor.subscribe("all_rooms");
+//Nos suscribimos a joinplayers para ver la quien esta en cada sala
+Meteor.subscribe("all_joinPlayers");
 
 /***************************** ZONA REACTIVA ***********************/
 
@@ -107,6 +109,8 @@ Meteor.startup(function() {
 	$(".toPlayers").click(function(){
 		$("#allPlayers").show();
 	})
+
+
 
   $(document).on("click", ".alert .close", function(e) {
       $(this).parent().hide();
@@ -304,7 +308,6 @@ Template.unirspartida.Salas= function(){
   return rooms_data;
 }
 
-//********************************* ADRIAN TE TOCA MODIFICAR AQUI PARA TU SALA DE JUEGO ************
 //el listado de salas se debe ocultar y debe aparecer la sala donde te has metido
 Template.unirspartida.events={
     'click #toPlay': function () {
@@ -315,8 +318,8 @@ Template.unirspartida.events={
             host: sala,
             usuario: jugador
           });
-          //en concreto es esta parte la que hay que modificar
-        alert("SE HA AÑADIDO UN JUGADOR, AHORA LE TOCA A LA SALA")
+        //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
+        $("#allPlayers").show();
       }else{
         alert("Debes estar logeado para jugar una partida");
       }
@@ -324,6 +327,17 @@ Template.unirspartida.events={
     }
 }
 
+//helper que muestra el nombre de cada jugador de la sala a la que te unes
+Template.jugadrspartida.Jugador= function(){
+  var players= JoinPlayer.find({},{})
+  console.log(players);
+  var players_name=[];
+
+  players.forEach(function (x){
+    players_name.push({nombre:x.usuario});
+  })
+  return players_name;
+}
 
 //Zona de registro 
 Accounts.ui.config({
