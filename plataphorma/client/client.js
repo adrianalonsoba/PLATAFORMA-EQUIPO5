@@ -227,38 +227,92 @@ Template.input.events = {
 }
 
 //Template para la creacion de una partida con el boton nueva partida
+
 Template.crearpartida.events = {
     'submit': function (e, tmpl) {
+
         // Prevengo la acción por defecto (submit)
+        
+        var formularioIncompleto = false;
+
         e.preventDefault();
         
         if (Meteor.userId()){
 
+          //Guardo en variables los campos obtenidos del formulario
+
           var nombrePartida = tmpl.find('#namePartida').value;
           var numeroJugadores = tmpl.find('#Jugadores').value;
-          var numeroIA = tmpl.find('#ia').value;
           var jugador = Meteor.user().username;
+          var numeroIA = tmpl.find('#ia').value;
+
+          //Comprobación de errores
+
+          if (numeroJugadores<2){
+            if (numeroJugadores>5){
+              formularioIncompleto=true;
+              alert("El numero de jugadores no es el correcto. Minimo de 2 - Maximo de 5");
+            }
+          }
+
+          if ((numeroIA)>(numeroJugadores)){
+            formularioIncompleto=true;
+            alert("El numero de IA debe ser inferior al numero de jugadores");
+          }
+
+          if (nombrePartida==""){
+            formularioIncompleto=true;
+            alert("Falta el nombre de la partida");
+          }
+
+          if (numeroJugadores==""){
+            formularioIncompleto=true;
+            alert("No has seleccionado numero de jugadores");
+          }
+          
+          if (numeroIA==""){
+            formularioIncompleto=true;
+            alert("No has seleccionado numero de IA");
+          }
+
+          //Comprobacion en la consola de que se cogen correctamente los datos del formulario
 
           console.log(nombrePartida);
           console.log(numeroJugadores);
           console.log(numeroIA);
           console.log(jugador);
 
-          if ((numeroJugadores<0)||(numeroIA)<0){
-            alert("Campos incorrectos, los numeros deben ser positivos");
+          if (!formularioIncompleto){
+            if ((numeroJugadores<0)||(numeroIA)<0){
+              alert("Campos incorrectos, los numeros deben ser positivos");
+            }else{
+              Rooms.insert({
+                nombreHost: jugador,
+                numJugadores: numeroJugadores,
+                numIA: numeroIA,
+                tiempoCreada: Date.now(),
+                miembrosSala: 0
+              });
+              tmpl.find('#namePartida').value="";
+              tmpl.find('#Jugadores').value="";
+              tmpl.find('#ia').value="";
+
+              //Comprobacion en la consola que guarda bien en la base de datos
+
+              var rooms = Rooms.findOne({nombreHost:jugador});
+              console.log(rooms);
+            }
           }else{
-            Rooms.insert({
-              nombreHost: jugador,
-              numJugadores: numeroJugadores,
-              tiempoCreada: Date.now(),
-              miembrosSala: 0
-            });
             tmpl.find('#namePartida').value="";
             tmpl.find('#Jugadores').value="";
             tmpl.find('#ia').value="";
           }
+          
         }else{
           alert("Debes estar logeado para crear una partida");
+          tmpl.find('#namePartida').value="";
+          tmpl.find('#Jugadores').value="";
+          tmpl.find('#ia').value="";
         }
     } 
 }; 
