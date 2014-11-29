@@ -95,7 +95,7 @@ Meteor.startup(function() {
    //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
-       $("#allSalas").hide();
+     $("#allSalas").hide();
 	   $("#allPlayers").hide();
 	})
 
@@ -312,14 +312,23 @@ Template.unirspartida.Salas= function(){
 Template.unirspartida.events={
     'click #toPlay': function () {
       if (Meteor.userId()){
-          var sala= this.id
           var jugador = Meteor.user().username;
-          JoinPlayer.insert({
-            host: sala,
-            usuario: jugador
-          });
-        //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
-        $("#allPlayers").show();
+          var ingame= JoinPlayer.findOne({usuario:jugador},{})
+          //un jugador solo puede entrar a 1 partida a la vez
+          if(!ingame){
+            var sala= this.id
+            JoinPlayer.insert({
+              host: sala,
+              usuario: jugador
+            });
+            //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
+            $("#allPlayers").show();
+            //La sala de partidas tambien debe desaparecer
+            $("#allSalas").slideUp("slow")
+          //en otro caso salta un alert
+          }else{
+            alert("Ya está en una partida en curso");
+          }
       }else{
         alert("Debes estar logeado para jugar una partida");
       }
