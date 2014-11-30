@@ -95,7 +95,7 @@ Meteor.startup(function() {
    //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
-     $("#allSalas").hide();
+       $("#allSalas").hide();
 	   $("#allPlayers").hide();
 	})
 
@@ -103,7 +103,8 @@ Meteor.startup(function() {
 		$("#allSalas").show();
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
-		$("#allPlayers").hide();
+		//$("#allPlayers").hide();
+		$("#allPlayers").show();
 	})
 
 	$(".toPlayers").click(function(){
