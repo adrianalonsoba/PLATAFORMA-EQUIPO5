@@ -368,13 +368,13 @@ Template.unirspartida.events={
     'click #toPlay': function () {
       if (Meteor.userId()){
           var jugador = Meteor.user().username;
-          var ingame= JoinPlayer.findOne({usuario:jugador},{})
+          var ingame= JoinPlayer.findOne({user_name:jugador},{})
           //un jugador solo puede entrar a 1 partida a la vez
           if(!ingame){
             var sala= this.id
             JoinPlayer.insert({
-              host: sala,
-              usuario: jugador
+              host: sala, // ¿este campo no seria la id del host?
+              user_name: jugador
             });
             //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
             $("#allPlayers").show();
@@ -393,12 +393,12 @@ Template.unirspartida.events={
 
 //helper que muestra el nombre de cada jugador de la sala a la que te unes
 Template.jugadrspartida.Jugador= function(){
+  //falta filtrar jugadores por la sala en cuestion
   var players= JoinPlayer.find({},{})
-  console.log(players);
   var players_name=[];
 
   players.forEach(function (x){
-    players_name.push({nombre:x.usuario});
+    players_name.push({nombre:x.user_name});
   })
   return players_name;
 }
