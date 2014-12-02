@@ -288,11 +288,11 @@ Template.crearpartida.events = {
               alert("Campos incorrectos, los numeros deben ser positivos");
             }else{
               Rooms.insert({
-                nombreHost: jugador,
-                numJugadores: numeroJugadores,
-                numIA: numeroIA,
-                tiempoCreada: Date.now(),
-                miembrosSala: 0
+                user_name: jugador,
+                max_players: numeroJugadores,
+                max_IAs: numeroIA,
+                date: Date.now(),
+                in_players: 0
               });
               tmpl.find('#namePartida').value="";
               tmpl.find('#Jugadores').value="";
@@ -300,7 +300,7 @@ Template.crearpartida.events = {
 
               //Comprobacion en la consola que guarda bien en la base de datos
 
-              var rooms = Rooms.findOne({nombreHost:jugador});
+              var rooms = Rooms.findOne({user_name:jugador});
               console.log(rooms);
             }
           }else{
