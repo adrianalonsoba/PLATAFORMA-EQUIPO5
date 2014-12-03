@@ -104,14 +104,12 @@ Meteor.startup(function() {
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
 		//$("#allPlayers").hide();
-		$("#allPlayers").show();
+    if(Meteor.userId()){
+		  $("#allPlayers").show();
+    }else{
+      $("#allPlayers").hide();
+    }
 	})
-
-	$(".toPlayers").click(function(){
-		$("#allPlayers").show();
-	})
-
-
 
   $(document).on("click", ".alert .close", function(e) {
       $(this).parent().hide();
@@ -401,6 +399,14 @@ Template.unirspartida.events={
         alert("Debes estar logeado para jugar una partida");
       }
 
+    },
+
+    'click #toPlayers': function () {
+      if(Meteor.userId()){
+        $("#allPlayers").show();
+      }else{
+       alert("Debes loguearte para poder ver las salas");
+      }
     }
 }
 
