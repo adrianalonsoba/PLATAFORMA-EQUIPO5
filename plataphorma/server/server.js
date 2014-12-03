@@ -108,6 +108,17 @@ Meteor.methods({
 			     points: points,
 			     game_id: game
 			    });
+    },
+    matchFinishCarcassone: function (state,points){
+    	if (this.userId){
+    		if(state=="ganada"){
+    			Users.update({_id:this.userId}, { $inc: { total_points: +points , victories: +1 } });
+    		}else if(state="perdida"){
+    			Users.update({_id:this.userId}, { $inc: { total_points: +points , defeats: +1 } });
+    		}else{
+    			Users.update({_id:this.userId}, { $inc: { total_points: -50 , dropouts: +1 } });
+    		}
+    	}
     }
 });
 
