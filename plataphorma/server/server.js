@@ -124,17 +124,17 @@ Meteor.startup(function() {
 		Games.insert({name: "FrootWars",banner: "http://www.viralvideopalace.com/wp-content/uploads/mvbthumbs/img_14457_annoying-orange-monster-burger.jpg",presentation:"¡La batalla ha comenzado! Comida hipercalorífica contra fruta sana... nunca antes en la historia se había visto una batalla tan sangrienta... . Gore en estado puro.",tutorial:"Use el ratón para tensar el tirachinas y lanzar la fruta para golpear la comida basura"});
 
 
-		Players.insert({name:"Pepe",points:8,victories:5,derrotas:2,abandonos:0});
-		Players.insert({name:"Antonio",points:14,victories:7,derrotas:0,abandonos:0});
-		Players.insert({name:"Manolo",points:20,victories:10,derrotas:0,abandonos:0});
-		Players.insert({name:"Jesulin",points:40,victories:30,derrotas:20,abandonos:0});
-		Players.insert({name:"Carmensita",points:0,victories:10,derrotas:20,abandonos:0});
+		Players.insert({user_name:"Pepe",total_points:8,victories:5,defeats:2,dropouts:0});
+		Players.insert({user_name:"Antonio",total_points:14,victories:7,defeats:0,dropouts:0});
+		Players.insert({user_name:"Manolo",total_points:20,victories:10,defeats:0,dropouts:0});
+		Players.insert({user_name:"Jesulin",total_points:40,victories:30,defeats:20,dropouts:0});
+		Players.insert({user_name:"Carmensita",total_points:0,victories:10,defeats:20,dropouts:0});
 		
 		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
 		Rooms.insert({user_name:"Antonio",max_players:3,max_IAs:1,in_players:2,date:0});
 		Rooms.insert({user_name:"Manolo",max_players:3,max_IAs:1,in_players:2,date:0});
 		Rooms.insert({user_name:"Jesulin",max_players:3,max_IAs:1,in_players:2,date:0});
-		Rooms.insert({user_name:"Carmensita",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
 		
 
 	};

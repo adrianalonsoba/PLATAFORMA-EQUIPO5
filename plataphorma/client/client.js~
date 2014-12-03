@@ -162,12 +162,12 @@ Template.MiniGames.MiniRanking=function(){
 }
 
 Template.Ranking.ByVictories=function(){
-      var us= Players.find({}, {limit:4, sort: {victories:-1,derrotas:1}});
+      var us= Players.find({}, {limit:4, sort: {victories:-1,defeats:1}});
       var users_data = [];
 
       us.forEach (function (m) {
  
-        users_data.push({name: m.name, victories: m.victories, derrotas: m.derrotas});
+        users_data.push({name: m.user_name, victories: m.victories, derrotas: m.defeats});
         
       });
 
@@ -181,7 +181,7 @@ Template.Ranking.ByPoints=function(){
 
       us.forEach (function (m) {
  
-        users_data.push({name: m.name, points: m.points});
+        users_data.push({name: m.user_name, points: m.total_points});
         
       });
 
