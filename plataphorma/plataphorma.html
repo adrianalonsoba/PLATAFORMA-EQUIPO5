@@ -324,19 +324,13 @@
 				  </div>
        		<div class="row">
 		        <div class="col-md-6" id="crpart">
-					<div class="well">
 						{{> crearpartida}} 
-		            </div>
 		     	</div>
 		        <div class="col-md-6" id="allSalas">
-		            <div class="well" >
 						{{> unirspartida}}
-		            </div>
 		        </div>
-				<div class="col-md-8" id="allPlayers">
-		            <div class="well" >
+				<div class="col-md-6" id="allPlayers">
 						{{> jugadrspartida}}
-		            </div>
 		        </div>
                 <hr>
                  Tutorial
@@ -347,8 +341,8 @@
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
 	<!--div class="fill" style="background-image:url('/home/alberto/Escritorio/Fondo_inicial.jpg');"></div-->
-		<div class="jumbotron" style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 1150px;">
-			<a href="#" class="btn btn-default" id="createPartida" >Crear partida</a>
+		<div class="jumbotron" style="background: url(images/Fondo_inicial.png); height: 200px; width: 868px;" align="center">
+			<a href="#" class="btn btn-default" style="width: 100px; height:70px" id="createPartida" >Crear partida</a>
 			<a href="#" class="btn btn-default" id="unirsePartida">Unirse a partida</a>
 		</div>
 	<!--/div-->
@@ -357,7 +351,7 @@
 <template name="crearpartida">
 
     <form>
-    	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 200px; width: 500px;">
+    	<div class="jumbotron" style="background: url(images/40-589c4_1024x0768.jpg); height: 300px; width: 300px;">
     			<p>Partida:<input type="text" placeholder="Introduce nombre partida" id="namePartida"></p>
     			<p>Jugadores:<input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
     			<p>IA:<input type="number" placeholder="Introduce nº IA" id="ia"></p>
@@ -370,7 +364,7 @@
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
+	<div class="well" style="background: url(images/espadas-medievales-25209393.jpg); height: 800px; width: 300px;">
 		<div class="col-md-4">
             {{#each Salas}}
                 <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
@@ -383,7 +377,7 @@
 </template>
 <!--____________Template jugadores en partida__________-->
 <template name="jugadrspartida">
-	<div style="background-image: url(../plataphorma/public/images/splashscreen.png); height: 600px; width: 1150px;">
+	<div class="jumbotron" style="background: url(images/medieval-dama-precioso-imagen.jpg); height: 300px; width: 600px;">
 		<div class="col-md-4">
 			<h2>JUGADORES</h2>
         {{#each Jugador}}
