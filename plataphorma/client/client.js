@@ -242,7 +242,6 @@ Template.crearpartida.events = {
 
           //Guardo en variables los campos obtenidos del formulario
 
-          var nombrePartida = tmpl.find('#namePartida').value;
           var numeroJugadores = tmpl.find('#Jugadores').value;
           var jugador = Meteor.user().username;
           var numeroIA = tmpl.find('#ia').value;
@@ -261,11 +260,6 @@ Template.crearpartida.events = {
             alert("El numero de IA debe ser inferior al numero de jugadores");
           }
 
-          if (nombrePartida==""){
-            formularioIncompleto=true;
-            alert("Falta el nombre de la partida");
-          }
-
           if (numeroJugadores==""){
             formularioIncompleto=true;
             alert("No has seleccionado numero de jugadores");
@@ -278,40 +272,59 @@ Template.crearpartida.events = {
 
           //Comprobacion en la consola de que se cogen correctamente los datos del formulario
 
-          console.log(nombrePartida);
           console.log(numeroJugadores);
           console.log(numeroIA);
           console.log(jugador);
+
+ 	  var yaCreada = Rooms.findOne({user_name:jugador});
+	  console.log(yaCreada);
 
           if (!formularioIncompleto){
             if ((numeroJugadores<0)||(numeroIA)<0){
               alert("Campos incorrectos, los numeros deben ser positivos");
             }else{
-              Rooms.insert({
-                user_name: jugador,
-                max_players: numeroJugadores,
-                max_IAs: numeroIA,
-                date: Date.now(),
-                in_players: 0
-              });
-              tmpl.find('#namePartida').value="";
+	      if(yaCreada==null){
+                 Rooms.insert({
+                   user_name: jugador,
+                   max_players: numeroJugadores,
+                   max_IAs: numeroIA,
+                   date: Date.now(),
+                   in_players: 0
+                 });
+              }else{
+		alert("Ya tienes una partida en curso creada");
+	      }
               tmpl.find('#Jugadores').value="";
               tmpl.find('#ia').value="";
 
               //Comprobacion en la consola que guarda bien en la base de datos
 
               var rooms = Rooms.findOne({user_name:jugador});
+	      
               console.log(rooms);
+	      console.log(rooms._id);
+
+	      JoinPlayer.insert({
+              	id_room:rooms._id,
+              	user_name: jugador
+              });
+	      
+	      for(i=0;i<numeroIA;i++){
+		JoinPlayer.insert({
+              	    id_room:rooms._id,
+              	    user_name: "IA"
+                });
+	      }
             }
           }else{
-            tmpl.find('#namePartida').value="";
+
             tmpl.find('#Jugadores').value="";
             tmpl.find('#ia').value="";
           }
           
         }else{
           alert("Debes estar logeado para crear una partida");
-          tmpl.find('#namePartida').value="";
+
           tmpl.find('#Jugadores').value="";
           tmpl.find('#ia').value="";
         }
