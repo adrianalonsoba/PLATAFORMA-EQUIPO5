@@ -12,6 +12,16 @@ Meteor.publish("all_players", function () {
     return Players.find();
 });
 
+Meteor.publish("all_rooms", function () {
+    // publish every field of every game
+    return Rooms.find();
+});
+
+Meteor.publish("all_joinPlayers", function () {
+    // publish every field of every game
+    return JoinPlayer.find();
+});
+
 
 
 Meteor.publish("current_scores", function(current_game){
@@ -54,6 +64,29 @@ Messages.allow({
     }
 });
 
+JoinPlayer.allow({
+    insert: function(userId, doc){
+
+	return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+	return adminUser(userId);
+    }
+});
+
+//Permisos añadidos para que los usuarios puedan insertar en Rooms
+
+Rooms.allow({
+    insert: function(userId, doc){
+
+	return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+	return adminUser(userId);
+    }
+});
 
 
 Meteor.users.allow({
@@ -96,6 +129,13 @@ Meteor.startup(function() {
 		Players.insert({name:"Manolo",points:20,victories:10,derrotas:0,abandonos:0});
 		Players.insert({name:"Jesulin",points:40,victories:30,derrotas:20,abandonos:0});
 		Players.insert({name:"Carmensita",points:0,victories:10,derrotas:20,abandonos:0});
+		
+		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Antonio",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Manolo",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Jesulin",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Carmensita",max_players:3,max_IAs:1,in_players:2,date:0});
+		
 
 	};
 });

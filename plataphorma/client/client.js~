@@ -7,6 +7,8 @@ Meteor.subscribe("all_games");
 Meteor.subscribe("all_players");
 //Nos suscribimos a las salas de juego para poder entrar
 Meteor.subscribe("all_rooms");
+//Nos suscribimos a joinplayers para ver la quien esta en cada sala
+Meteor.subscribe("all_joinPlayers");
 
 /***************************** ZONA REACTIVA ***********************/
 
@@ -101,12 +103,15 @@ Meteor.startup(function() {
 		$("#allSalas").show();
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
-		$("#allPlayers").hide();
-	})
-
-	$("#toPlayers").click(function(){
+		//$("#allPlayers").hide();
 		$("#allPlayers").show();
 	})
+
+	$(".toPlayers").click(function(){
+		$("#allPlayers").show();
+	})
+
+
 
   $(document).on("click", ".alert .close", function(e) {
       $(this).parent().hide();
@@ -223,38 +228,92 @@ Template.input.events = {
 }
 
 //Template para la creacion de una partida con el boton nueva partida
+
 Template.crearpartida.events = {
     'submit': function (e, tmpl) {
+
         // Prevengo la acción por defecto (submit)
+        
+        var formularioIncompleto = false;
+
         e.preventDefault();
         
         if (Meteor.userId()){
 
+          //Guardo en variables los campos obtenidos del formulario
+
           var nombrePartida = tmpl.find('#namePartida').value;
           var numeroJugadores = tmpl.find('#Jugadores').value;
-          var numeroIA = tmpl.find('#ia').value;
           var jugador = Meteor.user().username;
+          var numeroIA = tmpl.find('#ia').value;
+
+          //Comprobación de errores
+
+          if (numeroJugadores<2){
+            if (numeroJugadores>5){
+              formularioIncompleto=true;
+              alert("El numero de jugadores no es el correcto. Minimo de 2 - Maximo de 5");
+            }
+          }
+
+          if ((numeroIA)>(numeroJugadores)){
+            formularioIncompleto=true;
+            alert("El numero de IA debe ser inferior al numero de jugadores");
+          }
+
+          if (nombrePartida==""){
+            formularioIncompleto=true;
+            alert("Falta el nombre de la partida");
+          }
+
+          if (numeroJugadores==""){
+            formularioIncompleto=true;
+            alert("No has seleccionado numero de jugadores");
+          }
+          
+          if (numeroIA==""){
+            formularioIncompleto=true;
+            alert("No has seleccionado numero de IA");
+          }
+
+          //Comprobacion en la consola de que se cogen correctamente los datos del formulario
 
           console.log(nombrePartida);
           console.log(numeroJugadores);
           console.log(numeroIA);
           console.log(jugador);
 
-          if ((numeroJugadores<0)||(numeroIA)<0){
-            alert("Campos incorrectos, los numeros deben ser positivos");
+          if (!formularioIncompleto){
+            if ((numeroJugadores<0)||(numeroIA)<0){
+              alert("Campos incorrectos, los numeros deben ser positivos");
+            }else{
+              Rooms.insert({
+                user_name: jugador,
+                max_players: numeroJugadores,
+                max_IAs: numeroIA,
+                date: Date.now(),
+                in_players: 0
+              });
+              tmpl.find('#namePartida').value="";
+              tmpl.find('#Jugadores').value="";
+              tmpl.find('#ia').value="";
+
+              //Comprobacion en la consola que guarda bien en la base de datos
+
+              var rooms = Rooms.findOne({user_name:jugador});
+              console.log(rooms);
+            }
           }else{
-            Rooms.insert({
-              nombreHost: jugador,
-              numJugadores: numeroJugadores,
-              tiempoCreada: Date.now(),
-              miembrosSala: 0
-            });
             tmpl.find('#namePartida').value="";
             tmpl.find('#Jugadores').value="";
             tmpl.find('#ia').value="";
           }
+          
         }else{
           alert("Debes estar logeado para crear una partida");
+          tmpl.find('#namePartida').value="";
+          tmpl.find('#Jugadores').value="";
+          tmpl.find('#ia').value="";
         }
     } 
 }; 
@@ -298,25 +357,33 @@ Template.unirspartida.Salas= function(){
   var rooms_data=[];
 
   rom.forEach(function (x){
-    rooms_data.push({host:x.host,id:x._id,jugadores:x.jugadores,ia:x.ia,dentro:x.dentro})
+    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
   })
   console.log(rooms_data)
   return rooms_data;
 }
 
-//********************************* ADRIAN TE TOCA MODIFICAR AQUI PARA TU SALA DE JUEGO ************
 //el listado de salas se debe ocultar y debe aparecer la sala donde te has metido
 Template.unirspartida.events={
     'click #toPlay': function () {
       if (Meteor.userId()){
-          var sala= this.id
           var jugador = Meteor.user().username;
-          JoinPlayer.insert({
-            host: sala,
-            usuario: jugador
-          });
-          //en concreto es esta parte la que hay que modificar
-        alert("SE HA AÑADIDO UN JUGADOR, AHORA LE TOCA A LA SALA")
+          var ingame= JoinPlayer.findOne({user_name:jugador},{})
+          //un jugador solo puede entrar a 1 partida a la vez
+          if(!ingame){
+            var sala= this.id
+            JoinPlayer.insert({
+              id_host: sala,
+              user_name: jugador
+            });
+            //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
+            $("#allPlayers").show();
+            //La sala de partidas tambien debe desaparecer
+            $("#allSalas").slideUp("slow")
+          //en otro caso salta un alert
+          }else{
+            alert("Ya está en una partida en curso");
+          }
       }else{
         alert("Debes estar logeado para jugar una partida");
       }
@@ -324,6 +391,17 @@ Template.unirspartida.events={
     }
 }
 
+//helper que muestra el nombre de cada jugador de la sala a la que te unes
+Template.jugadrspartida.Jugador= function(){
+  //falta filtrar jugadores por la sala en cuestion
+  var players= JoinPlayer.find({},{})
+  var players_name=[];
+
+  players.forEach(function (x){
+    players_name.push({nombre:x.user_name});
+  })
+  return players_name;
+}
 
 //Zona de registro 
 Accounts.ui.config({

@@ -130,11 +130,11 @@ Meteor.startup(function() {
 		Players.insert({name:"Jesulin",points:40,victories:30,derrotas:20,abandonos:0});
 		Players.insert({name:"Carmensita",points:0,victories:10,derrotas:20,abandonos:0});
 		
-		Rooms.insert({host:"Pepiño",jugadores:3,ia:1,dentro:2});
-		Rooms.insert({host:"Antonio",jugadores:3,ia:1,dentro:2});
-		Rooms.insert({host:"Manolo",jugadores:3,ia:1,dentro:2});
-		Rooms.insert({host:"Carmensita",jugadores:3,ia:1,dentro:2});
-		Rooms.insert({host:"Jesulin",jugadores:3,ia:1,dentro:2});
+		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Antonio",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Manolo",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Jesulin",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Carmensita",max_players:3,max_IAs:1,in_players:2,date:0});
 		
 
 	};

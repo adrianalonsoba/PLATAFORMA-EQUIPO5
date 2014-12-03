@@ -357,7 +357,7 @@ Template.unirspartida.Salas= function(){
   var rooms_data=[];
 
   rom.forEach(function (x){
-    rooms_data.push({host:x.host,id:x._id,jugadores:x.jugadores,ia:x.ia,dentro:x.dentro})
+    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
   })
   console.log(rooms_data)
   return rooms_data;
