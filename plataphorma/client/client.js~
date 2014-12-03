@@ -373,7 +373,7 @@ Template.unirspartida.events={
           if(!ingame){
             var sala= this.id
             JoinPlayer.insert({
-              id_host: sala,
+              id_room: sala,
               user_name: jugador
             });
             //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
