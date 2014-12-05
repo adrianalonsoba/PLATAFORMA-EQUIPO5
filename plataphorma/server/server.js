@@ -71,7 +71,7 @@ JoinPlayer.allow({
     },
     remove: function (userId, docs){
 
-	return adminUser(userId);
+	return Meteor.userId();
     }
 });
 
@@ -112,11 +112,11 @@ Meteor.methods({
     matchFinishCarcassone: function (state,points){
     	if (this.userId){
     		if(state=="ganada"){
-    			Users.update({_id:this.userId}, { $inc: { total_points: +points , victories: +1 } });
+    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , victories: +1 } });
     		}else if(state="perdida"){
-    			Users.update({_id:this.userId}, { $inc: { total_points: +points , defeats: +1 } });
+    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , defeats: +1 } });
     		}else{
-    			Users.update({_id:this.userId}, { $inc: { total_points: -50 , dropouts: +1 } });
+    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: -50 , dropouts: +1 } });
     		}
     	}
     }

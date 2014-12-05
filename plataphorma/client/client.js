@@ -1,4 +1,5 @@
 var currentUser = null;
+var currentRoom= null;
 
 
 // Nos suscribimos al catalogo de juegos
@@ -22,8 +23,10 @@ Tracker.autorun(function(){
 //Reactivo para mostrar o quitar el ranking
 Tracker.autorun(function(){
     currentUser = Meteor.userId();
+    currentRoom=null;
     if(currentUser==null){
       $("#rankingButton").hide();
+      $("#allPlayers").hide();
     }else{
       $("#rankingButton").show();
     }
@@ -86,16 +89,16 @@ Meteor.startup(function() {
       $("#contact").slideUp("slow")
       $("#container").hide();
       $("#gamecontainer").hide();
-	  $("#crs").hide();
-	  $("#crpart").hide();
-	  $("#allSalas").hide();
-	  $("#jugadrspartida").hide();
-	  $("#allPlayers").hide();
+	    $("#crs").hide();
+	    $("#crpart").hide();
+	    $("#allSalas").hide();
+	    $("#jugadrspartida").hide();
+	    $("#allPlayers").hide();
    })
    //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
-       $("#allSalas").hide();
+     $("#allSalas").hide();
 	   $("#allPlayers").hide();
 	})
 
@@ -104,10 +107,16 @@ Meteor.startup(function() {
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
 		//$("#allPlayers").hide();
-    if(Meteor.userId()){
+    //ALBERTO, HE AÑADIDO AQUI UNAS LINEAS PARA QUE APAREZCA LA SALA SOLO CUANDO ESTES DENTRO DE ESTA
+    //ESTABA HACIENDO EL AVANDONAR Y ME ESTABA LIANDO
+    var jugador = Meteor.user().username;
+    var sala= JoinPlayer.findOne({user_name:jugador});
+    if(sala){
 		  $("#allPlayers").show();
+      $("#allSalas").hide();
     }else{
       $("#allPlayers").hide();
+      $("#allSalas").show();
     }
 	})
 
@@ -118,6 +127,7 @@ Meteor.startup(function() {
 
 });
 
+//******************************* TEMPLATES DE DATOS***********************
 //Templates de presentacion de los juegos
 Template.PrincipalGames.games = function (){
     return Games.find();
@@ -200,7 +210,33 @@ Template.messages.messages = function () {
     return messages;
 }
 
+//helper que muestra el nombre de cada jugador de la sala a la que te unes
+Template.jugadrspartida.Jugador= function(){
+  //falta filtrar jugadores por la sala en cuestion
+  var players= JoinPlayer.find({},{})
+  var players_name=[];
 
+  players.forEach(function (x){
+    players_name.push({nombre:x.user_name});
+  })
+  return players_name;
+}
+
+// Templates de salas de juego
+Template.unirspartida.Salas= function(){
+  var rom= Rooms.find({},{})
+
+  console.log(rom)
+  var rooms_data=[];
+
+  rom.forEach(function (x){
+    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
+  })
+  console.log(rooms_data)
+  return rooms_data;
+}
+
+//************************************** TEMPLATE DE EVENTOS ****************************
 
 Template.input.events = {
     'keydown input#message' : function (event) {
@@ -348,30 +384,20 @@ Template.PrincipalGames.events = {
       var game = Games.findOne({name:"FrootWars"});
       Session.set("current_game", game._id);
     },
-    'click #Carcassone': function () {
+    'click #Carcassone': function () { //ESTA PARTE HAY QUE TOCARLA PARA VER SI HAY UNA PARTIDA EN LA QUE
+      //ESTOY Y ADEMAS ESTA EMPEZADA
       var game = Games.findOne({name:"Carcassone"});
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
-	  $("#crs").show();
+	    $("#crs").show();
+      var jugador = Meteor.user().username;
+      var sala= JoinPlayer.findOne({user_name:jugador});
+      if(sala){
+        $("#allPlayers").show();
+      }
       Session.set("current_game", game._id);
     },
-}
-
-// Templates de salas de juego
-
-//--Template para que aparezcan las salas
-Template.unirspartida.Salas= function(){
-  var rom= Rooms.find({},{})
-
-  console.log(rom)
-  var rooms_data=[];
-
-  rom.forEach(function (x){
-    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
-  })
-  console.log(rooms_data)
-  return rooms_data;
 }
 
 //el listado de salas se debe ocultar y debe aparecer la sala donde te has metido
@@ -387,6 +413,7 @@ Template.unirspartida.events={
               id_room: sala,
               user_name: jugador
             });
+            currentRoom=sala;
             //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
             $("#allPlayers").show();
             //La sala de partidas tambien debe desaparecer
@@ -410,16 +437,20 @@ Template.unirspartida.events={
     }
 }
 
-//helper que muestra el nombre de cada jugador de la sala a la que te unes
-Template.jugadrspartida.Jugador= function(){
-  //falta filtrar jugadores por la sala en cuestion
-  var players= JoinPlayer.find({},{})
-  var players_name=[];
+Template.jugadrspartida.events={
 
-  players.forEach(function (x){
-    players_name.push({nombre:x.user_name});
-  })
-  return players_name;
+  'click #dropOutGame': function () {
+    
+      var jugador = Meteor.user().username;
+      var ensala= JoinPlayer.findOne({user_name:jugador});
+      var sala= Rooms.findOne({_id:ensala.id_room})
+      if(ensala){
+        JoinPlayer.remove(ensala._id)
+        $("#allPlayers").slideUp("slow");
+      }
+      currentRoom=null;
+
+  }
 }
 
 //Zona de registro 
