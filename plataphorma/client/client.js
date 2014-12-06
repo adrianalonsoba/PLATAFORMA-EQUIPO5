@@ -344,7 +344,7 @@ Template.crearpartida.events = {
               });
 	      
 	      for(i=0;i<numeroIA;i++){
-		JoinPlayer.insert({
+		            JoinPlayer.insert({
               	    id_room:rooms._id,
               	    user_name: "IA"
                 });
@@ -414,10 +414,23 @@ Template.unirspartida.events={
               user_name: jugador
             });
             currentRoom=sala;
-            //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
-            $("#allPlayers").show();
-            //La sala de partidas tambien debe desaparecer
-            $("#allSalas").slideUp("slow")
+            //actualizamos la sala
+            Rooms.update({_id:sala},{ $inc: {in_players:+1} });
+            //miramos si a sala cumple el cupo para iniciar la partida, si no mostramos solo la sala
+            var room=Rooms.findOne({_id:sala},{})
+            console.log(room)
+            if(room.max_players==room.in_players){
+              alert("QUE COMIENCE LA PARTIDA!!!!!");
+              //**************************************************************************\\
+              //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
+              $("#allPlayers").show();
+              $("#allSalas").slideUp("slow")
+            }else{
+              //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
+              $("#allPlayers").show();
+              //La sala de partidas tambien debe desaparecer
+              $("#allSalas").slideUp("slow")
+            }
           //en otro caso salta un alert
           }else{
             alert("Ya está en una partida en curso");
@@ -437,6 +450,10 @@ Template.unirspartida.events={
     }
 }
 
+//Evento de borrado de un jugador de una sala, en caso de existir
+//0 jugadores tras el borrado, borramos la sala entera. Si el jugador que sale
+//era el host, cambiamos por un host nuevo.
+
 Template.jugadrspartida.events={
 
   'click #dropOutGame': function () {
@@ -444,12 +461,21 @@ Template.jugadrspartida.events={
       var jugador = Meteor.user().username;
       var ensala= JoinPlayer.findOne({user_name:jugador});
       var sala= Rooms.findOne({_id:ensala.id_room})
+      Rooms.update({_id:ensala.id_room},{ $inc: {in_players:-1} });
+      sala= Rooms.findOne({_id:ensala.id_room})
+      console.log(sala.in_players)
       if(ensala){
         JoinPlayer.remove(ensala._id)
         $("#allPlayers").slideUp("slow");
       }
       currentRoom=null;
-
+      if(sala.in_players==0){
+        alert("que borro la partida!")
+        Rooms.remove(sala._id)
+      }else if(sala.user_name==ensala.user_name){
+        ensala= JoinPlayer.findOne({id_room:sala._id});
+        Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
+      }
   }
 }
 

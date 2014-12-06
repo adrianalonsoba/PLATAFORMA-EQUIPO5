@@ -84,8 +84,12 @@ Rooms.allow({
     },
     remove: function (userId, docs){
 
-	return adminUser(userId);
-    }
+	return Meteor.userId();
+    },
+    update: function (userId, docs){
+
+    return Meteor.userId();
+    },
 });
 
 
