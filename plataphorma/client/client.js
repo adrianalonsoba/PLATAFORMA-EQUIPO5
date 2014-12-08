@@ -326,26 +326,8 @@ Template.crearpartida.events = {
                      max_players: numeroJugadores,
                      max_IAs: numeroIA,
                      date: Date.now(),
-                     in_players: 0
+                     in_players: numeroIA+1 //Como jugadores en la sala estan el creador de la partida y el numero de IA seleccionada
                    });
-
-                   //Insertamos como jugador asociado a una sala al creador de la partida.
-
-                  JoinPlayer.insert({
-                    id_room:rooms._id,
-                    user_name: jugador
-                  });
-
-                  //Insertamos como jugadores a tantas IA como nos hayan pasado
-
-                  if(numeroIA>0){
-                    for(i=0;i<numeroIA;i++){
-                      JoinPlayer.insert({
-                        id_room:rooms._id,
-                        user_name: "IA"
-                      });
-                    }
-                  }
 
               }else{
   		            alert("Ya tienes una partida en curso creada");
@@ -361,6 +343,28 @@ Template.crearpartida.events = {
 	      
             console.log(rooms);
             console.log(rooms._id);
+
+            if(yaCreada==null){
+
+            //Insertamos como jugador asociado a una sala al creador de la partida.
+
+              JoinPlayer.insert({
+                id_room:rooms._id,
+                user_name: jugador
+              });
+
+            //Insertamos como jugadores a tantas IA como nos hayan pasado
+
+              if(numeroIA>0){
+                for(i=0;i<numeroIA;i++){
+                  JoinPlayer.insert({
+                    id_room:rooms._id,
+                    user_name: "IA"
+                  });
+                }
+              }
+            }
+
             
           }else{
 
