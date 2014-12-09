@@ -30,16 +30,20 @@ Tracker.autorun(function(){
     }else{
       $("#rankingButton").show();
 
-      //Inicializacion de los jugadores
+      //Inicializacion de los jugadores, compruebo si ya he creado el usuario en la base de datos.
 
-      Players.insert({
-        user_name: Meteor.user().username ,
-        total_points: 0,
-        victories: 0,
-        defeats: 0,
-        dropouts:0
-      });
+      var yaCreado = Players.findOne({user_name:Meteor.user().username});
+      console.log(yaCreado);
 
+      if (yaCreado==null){
+        Players.insert({
+          user_name: Meteor.user().username ,
+          total_points: 0,
+          victories: 0,
+          defeats: 0,
+          dropouts:0
+        });
+      }
     }
 });
 
