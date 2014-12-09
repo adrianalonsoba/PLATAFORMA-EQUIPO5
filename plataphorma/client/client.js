@@ -485,11 +485,14 @@ Template.jugadrspartida.events={
         $("#allPlayers").slideUp("slow");
       }
       currentRoom=null;
-      if(sala.in_players==0){
-        alert("que borro la partida!")
+      if(sala.in_players-sala.max_IAs==0){
+        var ias= JoinPlayer.find({id_room:sala._id})
+        ias.forEach(function(m){
+          JoinPlayer.remove(m._id);
+        })
         Rooms.remove(sala._id)
       }else if(sala.user_name==ensala.user_name){
-        ensala= JoinPlayer.findOne({id_room:sala._id});
+        ensala= JoinPlayer.findOne({id_room:sala._id},{user_name:{$ne: "IA"}});
         Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
       }
   }
