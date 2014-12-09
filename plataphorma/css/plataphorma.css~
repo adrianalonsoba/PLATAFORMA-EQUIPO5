@@ -1,0 +1,27 @@
+/* CSS declarations go here */
+#createPartida{
+	margin: 0 auto;
+	width: 170px;
+	height: 60px;
+	color: white;
+	background: #804000;
+	font-size: 20px;
+	line-height: 40px;
+}
+#unirsePartida{
+	margin: 0 auto;
+	width: 170px;
+	height: 60px;
+	color: white;
+	background: #804000;
+	font-size: 20px;
+	line-height: 40px;
+}
+
+#crpart{
+	color: white;
+}
+
+#gcontainer{
+	align: center;
+}

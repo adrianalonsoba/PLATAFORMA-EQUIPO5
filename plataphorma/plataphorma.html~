@@ -342,7 +342,7 @@
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
 	<!--div class="fill" style="background-image:url('/home/alberto/Escritorio/Fondo_inicial.jpg');"></div-->
-		<div class="jumbotron" style="background: url(images/Fondo_inicial.png); height: 200px; width: 868px;" align="center">
+		<div class="jumbotron" style="background: url(images/Fondo_inicial.png); height: 200px; width: 868px;">
 			<a href="#" class="btn btn-default" id="createPartida" >Crear partida</a>
 			<a href="#" class="btn btn-default" id="unirsePartida">Unirse a partida</a>
 		</div>
