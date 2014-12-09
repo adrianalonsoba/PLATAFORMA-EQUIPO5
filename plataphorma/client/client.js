@@ -276,7 +276,7 @@ Template.crearpartida.events = {
 
           //Guardo en variables los campos obtenidos del formulario
 
-          var numeroJugadores = parseInt(tmpl.find('#Jugadores').value)+1; //Le sumamos 1 ya que el creador de la partida cuenta como jugador
+          var numeroJugadores = parseInt(tmpl.find('#Jugadores').value);
           var jugador = Meteor.user().username;
           var numeroIA = parseInt(tmpl.find('#ia').value);
 
