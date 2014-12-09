@@ -29,6 +29,17 @@ Tracker.autorun(function(){
       $("#allPlayers").hide();
     }else{
       $("#rankingButton").show();
+
+      //Inicializacion de los jugadores
+
+      Players.insert({
+        user_name: Meteor.user().username ,
+        total_points: 0,
+        victories: 0,
+        defeats: 0,
+        dropouts:0
+      });
+
     }
 });
 

@@ -53,6 +53,21 @@ function adminUser(userId) {
     return (userId && adminUser && userId === adminUser._id);
 }
 
+Players.allow({
+    insert: function(userId, doc){
+
+    return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+    return Meteor.userId();
+    },
+    update: function (userId, docs){
+
+    return Meteor.userId();
+    },
+});
+
 Messages.allow({
     insert: function(userId, doc){
 
