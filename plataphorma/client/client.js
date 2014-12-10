@@ -32,12 +32,12 @@ Tracker.autorun(function(){
 
       //Inicializacion de los jugadores, compruebo si ya he creado el usuario en la base de datos.
 
-      var yaCreado = Players.findOne({user_name:Meteor.user().username});
+      var yaCreado = Players.findOne({user_name:Meteor.user().username.toString()});
       console.log(yaCreado);
 
       if (yaCreado==null){
         Players.insert({
-          user_name: Meteor.user().username ,
+          user_name: Meteor.user().username.toString() ,
           total_points: 0,
           victories: 0,
           defeats: 0,
