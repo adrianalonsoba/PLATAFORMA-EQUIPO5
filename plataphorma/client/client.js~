@@ -52,8 +52,6 @@ Tracker.autorun(function(){
 	      if(juego!=undefined){
 		      console.log(juego.id_room)
 		      currentRoom=juego.id_room;
-	      }else{
-	      	currentRoom=null;
 	      }
       }
     }
