@@ -34,26 +34,13 @@ Tracker.autorun(function(){
 
       //Inicializacion de los jugadores, compruebo si ya he creado el usuario en la base de datos.
       if(Meteor.userId()){
-      	      console.log(Meteor.userId())
-      	      var id= Meteor.userId();
-	      var yaCreado = Players.findOne({originalID:id});
-	      console.log(yaCreado);
-
-	      if (yaCreado==null){
-		Players.insert({
-		  originalID: id ,
-		  total_points: 0,
-		  victories: 0,
-		  defeats: 0,
-		  dropouts:0
-		});
-	      }
 	      var juego=JoinPlayer.findOne({originalID:Meteor.userId()})
 	      if(juego!=undefined){
 		      console.log(juego.id_room)
 		      currentRoom=juego.id_room;
 	      }else{
 	      	currentRoom=null;
+          console.log("no esta en partida")
 	      }
       }
     }
@@ -383,6 +370,17 @@ Template.crearpartida.events = {
                 user_name: jugador
               });
 
+            var yaCreado = Players.findOne({originalID:Meteor.userId()})
+            if (yaCreado==null){
+              Players.insert({
+                originalID: Meteor.userId() ,
+                total_points: 0,
+                victories: 0,
+                defeats: 0,
+                dropouts:0
+              });
+            }
+
             //Insertamos como jugadores a tantas IA como nos hayan pasado
 
               if(numeroIA>0){
@@ -461,6 +459,17 @@ Template.unirspartida.events={
               user_name: jugador
             });
             currentRoom=sala;
+            //Inicializacion del usuario cuando vamos a usar la base de datos para el
+            var yaCreado = Players.findOne({originalID:Meteor.userId()})
+            if (yaCreado==null){
+              Players.insert({
+                originalID: Meteor.userId() ,
+                total_points: 0,
+                victories: 0,
+                defeats: 0,
+                dropouts:0
+              });
+            }
             //actualizamos la sala
             Rooms.update({_id:sala},{ $inc: {in_players:+1} });
             //miramos si a sala cumple el cupo para iniciar la partida, si no mostramos solo la sala

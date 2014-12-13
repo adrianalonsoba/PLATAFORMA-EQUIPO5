@@ -69,7 +69,7 @@ Players.allow({
     },
     update: function (userId, docs){
 
-    return Meteor.userId();
+    return adminUser(userId);
     },
 });
 
@@ -158,12 +158,13 @@ Meteor.startup(function() {
 		Games.insert({name: "AlienInvasion",banner: "http://ccchuntersville.com/wp-content/uploads/2012/04/Aliens-Banner.jpg",presentation:"Emocionante juego de naves espaciales. Se el piloto de la nave Karsis y embarcate en la defensa del sistema solar contra la amenaza de Andromeda. El futuro de la raza humana esta en tus manos",tutorial:"Use los botones de dirección del teclado para manejar la nave. Con el botón espacio puede disparar. La destrucción de la nave supone el reseteo del juego"});
 		Games.insert({name: "FrootWars",banner: "http://www.viralvideopalace.com/wp-content/uploads/mvbthumbs/img_14457_annoying-orange-monster-burger.jpg",presentation:"¡La batalla ha comenzado! Comida hipercalorífica contra fruta sana... nunca antes en la historia se había visto una batalla tan sangrienta... . Gore en estado puro.",tutorial:"Use el ratón para tensar el tirachinas y lanzar la fruta para golpear la comida basura"});
 
-
+        /**
 		Players.insert({user_name:"Pepe",total_points:8,victories:5,defeats:2,dropouts:0});
 		Players.insert({user_name:"Antonio",total_points:14,victories:7,defeats:0,dropouts:0});
 		Players.insert({user_name:"Manolo",total_points:20,victories:10,defeats:0,dropouts:0});
 		Players.insert({user_name:"Jesulin",total_points:40,victories:30,defeats:20,dropouts:0});
 		Players.insert({user_name:"Carmensita",total_points:0,victories:10,defeats:20,dropouts:0});
+        */
 		
 		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
 		Rooms.insert({user_name:"Antonio",max_players:3,max_IAs:1,in_players:2,date:0});
