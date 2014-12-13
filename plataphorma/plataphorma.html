@@ -341,39 +341,27 @@
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
-	<!--div class="fill" style="background-image:url('/home/alberto/Escritorio/Fondo_inicial.jpg');"></div-->
-		<div class="jumbotron" style="background: url(images/Fondo_inicial.png); height: 200px; width: 868px;" align="center">
 			<a href="#" class="btn btn-default" id="createPartida" >Crear partida</a>
 			<a href="#" class="btn btn-default" id="unirsePartida">Unirse a partida</a>
-		</div>
-	<!--/div-->
 </template>
 <!--____________Template crear partida________-->
 <template name="crearpartida">
 
     <form>
-    	<div class="jumbotron" style="background: url(images/40-589c4_1024x0768.jpg); height: 300px; width: 300px;">
-    			<p>Jugadores:<input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
-    			<p>IA:<input type="number" placeholder="Introduce nº IA" id="ia"></p>
-    			
-    			<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
-    			
-    	</div>
+		<p>Jugadores:</p><p><input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
+		<p>IA:</p><p><input type="number" placeholder="Introduce nº IA" id="ia"></p>
+		<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
     </form>
 
 </template>
 <!--____________Template unirse partida_______-->
 <template name="unirspartida">
-	<div class="well" style="background: url(images/espadas-medievales-25209393.jpg); height: 800px; width: 300px;">
-		<div class="col-md-4">
-            {{#each Salas}}
-                <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
-                    <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
-					<a value="{{id}}" class="btn btn-default" id= "toPlayers">Apuntados</a>
-                </li>
-            {{/each}}
-		</div>
-	</div>
+    {{#each Salas}}
+        <p>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
+            <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
+			<a value="{{id}}" class="btn btn-default" id= "toPlayers">Apuntados</a>
+        </p>
+    {{/each}}
 </template>
 <!--____________Template jugadores en partida__________-->
 <template name="jugadrspartida">
@@ -384,7 +372,7 @@
          <strong>{{nombre}}</strong>
         {{/each}}
 		</div>
-        <a class="btn btn-default" id= "dropOutGame" style="bottom:30px;left:30px; position:absolute">Avandonar</a>
+        <a class="btn btn-default" id= "dropOutGame" style="bottom:30px;left:30px; position:absolute">Abandonar</a>
 	</div>
 </template>
 
