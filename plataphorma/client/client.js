@@ -25,10 +25,11 @@ Tracker.autorun(function(){
 //Reactivo para mostrar o quitar el ranking
 Tracker.autorun(function(){
     currentUser = Meteor.userId();
-    currentRoom=null;
+    currentRoom= Session.get("currentRoom");
     if(currentUser==null){
       $("#rankingButton").hide();
       $("#allPlayers").hide();
+      Session.set("currentRoom",null)
     }else{
       $("#rankingButton").show();
 
@@ -38,6 +39,7 @@ Tracker.autorun(function(){
 	      if(juego!=undefined){
 		      console.log(juego.id_room)
 		      currentRoom=juego.id_room;
+          Session.set("currentRoom",currentRoom)
 	      }else{
 	      	currentRoom=null;
           console.log("no esta en partida")
@@ -188,8 +190,8 @@ Template.Ranking.ByVictories=function(){
       var users_data = [];
 
       us.forEach (function (m) {
- 
-        users_data.push({name: m.user_name, victories: m.victories, derrotas: m.defeats});
+        user=Meteor.users.findOne({_id:m.originalID})
+        users_data.push({name: user.username, victories: m.victories, derrotas: m.defeats});
         
       });
 
@@ -200,10 +202,10 @@ Template.Ranking.ByVictories=function(){
 Template.Ranking.ByPoints=function(){
       var us= Players.find({}, {limit:4, sort: {points:-1}});
       var users_data = [];
-
+      var user;
       us.forEach (function (m) {
- 
-        users_data.push({name: m.user_name, points: m.total_points});
+        user=Meteor.users.findOne({_id:m.originalID})
+        users_data.push({name: user.username, points: m.total_points});
         
       });
 
@@ -227,7 +229,7 @@ Template.messages.messages = function () {
 //helper que muestra el nombre de cada jugador de la sala a la que te unes
 Template.jugadrspartida.Jugador= function(){
   //falta filtrar jugadores por la sala en cuestion
-  console.log(currentRoom)
+  console.log(Session.get("currentRoom"))
   var players= JoinPlayer.find({id_room:currentRoom},{})
   console.log(players);
   var players_name=[];
@@ -240,6 +242,7 @@ Template.jugadrspartida.Jugador= function(){
 
 // Templates de salas de juego
 Template.unirspartida.Salas= function(){
+
   var rom= Rooms.find({},{})
 
   console.log(rom)
@@ -370,6 +373,8 @@ Template.crearpartida.events = {
                 user_name: jugador
               });
 
+            Session.set("currentRoom",rooms._id)
+
             var yaCreado = Players.findOne({originalID:Meteor.userId()})
             if (yaCreado==null){
               Players.insert({
@@ -459,6 +464,7 @@ Template.unirspartida.events={
               user_name: jugador
             });
             currentRoom=sala;
+            Session.set("currentRoom",sala)
             //Inicializacion del usuario cuando vamos a usar la base de datos para el
             var yaCreado = Players.findOne({originalID:Meteor.userId()})
             if (yaCreado==null){
@@ -535,6 +541,7 @@ Template.jugadrspartida.events={
         ensala= JoinPlayer.findOne({id_room:sala._id},{user_name:{$ne: "IA"}});
         Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
       }
+      Session.set("currentRoom",null)
   }
 }
 
