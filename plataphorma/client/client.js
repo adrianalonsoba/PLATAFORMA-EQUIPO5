@@ -20,6 +20,8 @@ Tracker.autorun(function(){
     var current_game = Session.get("current_game");
     Meteor.subscribe("current_scores", current_game);
     Meteor.subscribe("messages_current_game", current_game);
+
+
 });
 
 //Reactivo para mostrar o quitar el ranking
@@ -39,7 +41,8 @@ Tracker.autorun(function(){
 	      if(juego!=undefined){
 		      console.log(juego.id_room)
 		      currentRoom=juego.id_room;
-          Session.set("currentRoom",currentRoom)
+          Session.set("currentRoom",currentRoom);
+          Meteor.subscribe("messages_current_room", currentRoom);
 	      }else{
 	      	currentRoom=null;
           console.log("no esta en partida")

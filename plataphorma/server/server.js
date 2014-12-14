@@ -51,6 +51,13 @@ Meteor.publish("messages_current_game", function (current_game) {
 });
 
 
+Meteor.publish("messages_current_room", function (currentRoom) {
+
+    return Messages.find({id_room: currentRoom}, 
+             {limit:5, sort: {time:-1}});
+    
+});
+
 
 //Definición de permisos de usuarios que intentan tocar dentro de la colección users.
 function adminUser(userId) {

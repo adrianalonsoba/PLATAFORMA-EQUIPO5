@@ -339,7 +339,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12">
-				_Esta es la zona en la que se va a situar el chat
+				{{> chatroom}}
 			</div>
 		</div>
 </template>
@@ -529,3 +529,40 @@
     </tbody>
   </table>
 </template>
+
+<template name="chatroom">
+  {{#if none }}
+  <h3> Chat Plataphorma </h3>
+  {{else}}
+  <h3> Chat {{gameName}} </h3>
+  {{/if}}
+  
+  {{> inputroom    }}
+  {{> messagesroom }}
+</template>
+
+
+<template name="inputroom">
+  <p>Message: <input type="text" id="message"></p>
+
+  
+  <div class="alert fade in" id="login-error" style="display:none;">
+    <button type="button" class="close">x</button>
+    You must be signed in to post messages.
+  </div>
+
+</template>
+
+<template name="messagesroom">
+  <table id="rooms" class="table table-striped">  
+    <tbody>
+      {{#each messages}}
+      <tr>
+    <td><strong>{{name}}:</strong></td>
+    <td>{{message}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
