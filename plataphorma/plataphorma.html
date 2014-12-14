@@ -313,31 +313,35 @@
 <!--_________Template para Carcassone________-->
 <template name="Carcassone">
 	    <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">{{game}}
-                    </h1>
-                </div>
+            <div class="col-md-12">
+                <h1 class="page-header">
+					{{game}}
+                </h1>
             </div>
-            <div class="col-lg-8">
-                <!-- Preview Image -->
+        </div>
+		<div class="row">
+            <div class="col-md-12">
                   <div id='gcontainer'>
                     {{> inicrs}}
 				  </div>
-       		<div class="row">
-		        <div class="col-md-6" id="crpart">
-						{{> crearpartida}} 
-		     	</div>
-		        <div class="col-md-6" id="allSalas">
-						{{> unirspartida}}
-		        </div>
-				<div class="col-md-6" id="allPlayers">
-						{{> jugadrspartida}}
-		        </div>
-                <hr>
-                 Tutorial
-                <hr>
 			</div>
-            </div>
+		</div>
+   		<div class="row">
+	        <div class="col-md-6" id="crpart">
+					{{> crearpartida}} 
+	     	</div>
+	        <div class="col-md-6" id="allSalas">
+					{{> unirspartida}}
+	        </div>
+			<div class="col-md-6" id="allPlayers">
+					{{> jugadrspartida}}
+	        </div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				_Esta es la zona en la que se va a situar el chat
+			</div>
+		</div>
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
@@ -356,6 +360,7 @@
 </template>
 <!--____________Template unirse partida______-->
 <template name="unirspartida">
+	<h2 align="center">SALAS</h2>
     {{#each Salas}}
         <p>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
             <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
@@ -365,15 +370,12 @@
 </template>
 <!--____________Template jugadores en partida__________-->
 <template name="jugadrspartida">
-	<div class="jumbotron" style="background: url(images/medieval-dama-precioso-imagen.jpg); height: 300px; width: 600px;">
-		<div class="col-md-4">
-			<h2>JUGADORES</h2>
+	<h2 align="center">JUGADORES</h2>
         {{#each Jugador}}
-         <strong>{{nombre}}</strong>
+        <p><strong>{{nombre}}</strong></p>
         {{/each}}
-		</div>
-        <a class="btn btn-default" id= "dropOutGame" style="bottom:30px;left:30px; position:absolute">Abandonar</a>
-	</div>
+        <a class="btn btn-default" id= "dropOutGame">Abandonar</a>
+		<a class="btn btn-default" id= "return">Atras</a>
 </template>
 
 <!--_________Template para Carcassone_________-->
