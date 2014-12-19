@@ -151,9 +151,11 @@
 
 <!--______________________________________ CARCASSONE _____________________________________-->
 		<!-- Content Row -->
-		<div class="row" id="crs">
-			{{>Carcassone}}
-		</div>
+        <div id="serverCarcassone">
+    		<div class="row" id="crs">
+    			{{>Carcassone}}
+    		</div>
+        </div>
 
 <!-- Page Heading/Breadcrumbs -->
     <div id="contact">
@@ -378,7 +380,7 @@
 		<a class="btn btn-default" id= "return">Atras</a>
 </template>
 
-<!--_________Template para Carcassone_________-->
+<!--_________Template para canvas Carcassone_________-->
 <template name="carcassone">
   <canvas  id="gamec" width='320' height='480'></canvas>
 </template>

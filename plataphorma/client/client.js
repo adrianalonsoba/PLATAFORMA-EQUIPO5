@@ -1,6 +1,6 @@
 var currentUser = null;
 var currentRoom= null;
-
+var playing=false;
 
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
@@ -28,10 +28,12 @@ Tracker.autorun(function(){
 Tracker.autorun(function(){
     currentUser = Meteor.userId();
     currentRoom= Session.get("currentRoom");
+    playing= Session.get("playing")
     if(currentUser==null){
       $("#rankingButton").hide();
       $("#allPlayers").hide();
       Session.set("currentRoom",null)
+      Session.set("playing",false)
     }else{
       $("#rankingButton").show();
 
@@ -43,13 +45,26 @@ Tracker.autorun(function(){
 		      currentRoom=juego.id_room;
           Session.set("currentRoom",currentRoom);
           Meteor.subscribe("messages_current_room", currentRoom);
+
+            var sala= Rooms.findOne({_id:currentRoom})
+            if(sala.start){
+              Session.set("playing",true)
+                $("#minigames").slideUp("slow")
+                $("#principal").slideUp("slow")
+                $("#myCarousel").hide("slow")
+                $("#serverCarcassone").hide()
+                alert("A JUGARRRRR!!!!")
+            }
 	      }else{
 	      	currentRoom=null;
+          Session.set("currentRoom",null)
+          Session.set("playing",false)
           console.log("no esta en partida")
 	      }
       }
     }
 });
+
 
 /*******************************************************************************
  *  Inicializacion del juego
@@ -316,14 +331,13 @@ Template.crearpartida.events = {
             alert("El numero de IA debe ser inferior al numero de jugadores");
           }
 
-          if (numeroJugadores==""){
+          if (isNaN(numeroJugadores)){
             formularioIncompleto=true;
             alert("No has seleccionado numero de jugadores");
           }
           
-          if (numeroIA==""){
-            formularioIncompleto=true;
-            alert("No has seleccionado numero de IA");
+          if (isNaN(numeroIA)){
+            numeroIA=0;
           }
 
           //Comprobacion en la consola de que se cogen correctamente los datos del formulario
@@ -342,14 +356,15 @@ Template.crearpartida.events = {
   	          if(yaCreada==null){
 
                    //Insertamos la sala con los datos introducidos, en la coleccion rooms
-
-                   Rooms.insert({
-                     user_name: jugador,
-                     max_players: numeroJugadores,
-                     max_IAs: numeroIA,
-                     date: Date.now(),
-                     in_players: numeroIA+1 //Como jugadores en la sala estan el creador de la partida y el numero de IA seleccionada
-                   });
+                   
+                    Rooms.insert({
+                       user_name: jugador,
+                       max_players: numeroJugadores,
+                       max_IAs: numeroIA,
+                       date: Date.now(),
+                       in_players: numeroIA+1, //Como jugadores en la sala estan el creador de la partida y el numero de IA seleccionada
+                       start:false
+                     });
 
               }else{
   		            alert("Ya tienes una partida en curso creada");
@@ -448,6 +463,9 @@ Template.PrincipalGames.events = {
       if(sala){
         $("#allPlayers").show();
       }
+      if(Session.get("playing")){
+        $("#serverCarcassone").hide()
+      }
       Session.set("current_game", game._id);
     },
 }
@@ -486,10 +504,11 @@ Template.unirspartida.events={
             console.log(room)
             if(room.max_players==room.in_players){
               alert("QUE COMIENCE LA PARTIDA!!!!!");
+              Rooms.update({_id:room._id},{ $set: {start:true} });
+              Session.set("playing",true)
               //**************************************************************************\\
               //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
-              $("#allPlayers").show();
-              $("#allSalas").slideUp("slow")
+              $("#serverCarcassone").slideUp("slow")
             }else{
               //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
               $("#allPlayers").show();
