@@ -429,7 +429,12 @@ Template.crearpartida.events = {
           tmpl.find('#Jugadores').value="";
           tmpl.find('#ia').value="";
         }
-    } 
+    },
+	
+	'click #aceptar':function(){
+		$("#crpart").hide();
+		$("#allSalas").show();
+	} 
 }; 
 
 //Template para cambiar de juego
@@ -513,7 +518,7 @@ Template.unirspartida.events={
               //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
               $("#allPlayers").show();
               //La sala de partidas tambien debe desaparecer
-              $("#allSalas").slideUp("slow")
+              //$("#allSalas").slideUp("slow")
             }
           //en otro caso salta un alert
           }else{
@@ -564,7 +569,10 @@ Template.jugadrspartida.events={
         Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
       }
       Session.set("currentRoom",null)
-  }
+  },
+	'click #return':function(){
+		$("#allPlayers").hide();
+	}
 }
 
 //Zona de registro 

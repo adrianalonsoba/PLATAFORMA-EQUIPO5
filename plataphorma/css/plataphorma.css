@@ -80,19 +80,25 @@
 }
 
 #return{
-	position: relative;
-	top: 170px;
+	position: absolute;
+	top: 220px;
 	left: 250px;
 }
 
 #dropOutGame{
-	position:relative;
-	top:170px;
-	left: 250px;
+	position:absolute;
+	top:220px;
+	left: 330px;
 }
 
 #chatZone{
 	top: 30px;
-	left: 40px;
+	left: 20px;
 	background: blue;
+}
+
+#messageZone{
+	top: 30px;
+	left: 40px;
+	background: red;
 }

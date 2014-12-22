@@ -340,8 +340,15 @@
 	        </div>
 		</div>
 		<div class="row">
-			<div class="col-md-12" id="chatZone">
+			<div class="col-md-6" id="chatZone">
 				{{> chatroom}}
+			</div>
+			<div class="col-md-6" id="messageZone">
+				<p>Mensaje 1</p>
+				<p>Mensaje 2</p>
+				<p>Mensaje 3</p>
+				<p>Mensaje 4</p>
+				<p>Mensaje 5</p>
 			</div>
 		</div>
 </template>
@@ -366,7 +373,7 @@
     {{#each Salas}}
         <p>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
             <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
-			<a value="{{id}}" class="btn btn-default" id= "toPlayers">Apuntados</a>
+			<a value="{{id}}" class="btn btn-default" id="toPlayers">Apuntados</a>
         </p>
     {{/each}}
 </template>
