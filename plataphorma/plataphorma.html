@@ -59,26 +59,6 @@
                         <a href="#" id="contactButton">Contact</a>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="portfolio-1-col.html">1 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-2-col.html">2 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-3-col.html">3 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-4-col.html">4 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-item.html">Single Portfolio Item</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
@@ -93,7 +73,7 @@
                         </ul>
                     </li>
                     <li>
-			<!--*********************************** REGISTRO DE USUARIOS ************************************** -->
+	<!--*********************************** REGISTRO DE USUARIOS ************************************** -->
                         <a href="#">{{>loginButtons}}</a>
                     </li>
                 </ul>
@@ -152,9 +132,26 @@
 <!--______________________________________ CARCASSONE _____________________________________-->
 		<!-- Content Row -->
         <div id="serverCarcassone">
+            <div id="mycanvas">
+                ESTOY AQUI!
+                {{canvascc}}
+            </div>
     		<div class="row" id="crs">
     			{{>Carcassone}}
     		</div>
+            <!-- HE DIFERENCIADO ENTRE EL SERVIDOR DE CARCASSONE Y EL CHAT PARA QUE SALGA CUANDO SE JUEGA-->
+            <div id="chatCarcasson" class="row">
+                <div class="col-md-6" id="chatZone">
+                    {{> chatroom}}
+                </div>
+                <div class="col-md-6" id="messageZone">
+                    <p>Mensaje 1</p>
+                    <p>Mensaje 2</p>
+                    <p>Mensaje 3</p>
+                    <p>Mensaje 4</p>
+                    <p>Mensaje 5</p>
+                </div>
+            </div>
         </div>
 
 <!-- Page Heading/Breadcrumbs -->
@@ -339,18 +336,6 @@
 					{{> jugadrspartida}}
 	        </div>
 		</div>
-		<div class="row">
-			<div class="col-md-6" id="chatZone">
-				{{> chatroom}}
-			</div>
-			<div class="col-md-6" id="messageZone">
-				<p>Mensaje 1</p>
-				<p>Mensaje 2</p>
-				<p>Mensaje 3</p>
-				<p>Mensaje 4</p>
-				<p>Mensaje 5</p>
-			</div>
-		</div>
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
@@ -388,8 +373,8 @@
 </template>
 
 <!--_________Template para canvas Carcassone_________-->
-<template name="carcassone">
-  <canvas  id="gamec" width='320' height='480'></canvas>
+<template name="canvascc">
+  <canvas  id="{{MyId}}" width='1000' height='700'></canvas>
 </template>
 <!--_________Template para Alien Invasion________-->
 <template name="alien_invasion">
@@ -475,11 +460,11 @@
         <div class="row">
             <div class="well">
                 <div class="col-lg-12">
-                    <h3 class="page-header">[FOTACA!] Personal info</h3>
+                    <h3 class="page-header">{{MyName}}</h3>
                 </div>
 
-                <p>Posicion: [POSICIONACA!]</p>
-                <p>Ratio: [Ganadas/Perdidas]</p>
+                <p>Posicion: {{MyPosition}}</p>
+                <p>Ratio: {{Ratio}}</p>
                 <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -488,16 +473,13 @@
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <li><a href="#">Partida</a>
-                                    </li>
-                                <li><a href="#">Partida</a>
-                                    </li>
-                                 <li><a href="#">Partida</a>
-                                    </li>
+                                {{#each Partidas}}
+                                <li><a>{{points}} {{result}} {{date}}</a></li>
+                                {{/each}}
                             </div>
                         </div>
                  </div>
-                 <h3 class="page-header">PUNTOS:</h3>
+                 <h3 class="page-header">PUNTOS: {{Puntos}}</h3>
             </div>
         </div>
         <!-- /.row -->

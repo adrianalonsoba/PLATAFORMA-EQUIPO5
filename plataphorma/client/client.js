@@ -52,7 +52,9 @@ Tracker.autorun(function(){
                 $("#minigames").slideUp("slow")
                 $("#principal").slideUp("slow")
                 $("#myCarousel").hide("slow")
-                $("#serverCarcassone").hide()
+                $("#crs").hide()
+                $("#chatCarcasson").show()
+                $("#mycanvas").show();
                 alert("A JUGARRRRR!!!!")
             }
 	      }else{
@@ -60,6 +62,8 @@ Tracker.autorun(function(){
           Session.set("currentRoom",null)
           Session.set("playing",false)
           console.log("no esta en partida")
+          //FUNCIONAAAAAA!!!!!!!!!!!!! SOLO HAY QUE PONER AQUI QUE CUANDO ACABE LA PARTIDA SE OCULTE TODO
+              console.log("partida no empezada o partida terminada")
 	      }
       }
     }
@@ -85,6 +89,8 @@ Meteor.startup(function() {
    $("#unirspartida").hide();
    $("#jugadrspartida").hide();
    $("#contact").hide();
+   $("#chatCarcasson").hide();
+   $("#mycanvas").hide();
 	
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
@@ -95,6 +101,11 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
+      $("#chatCarcasson").slideUp()
+      $("#mycanvas").hide();
+      $("#serverCarcassone").slideUp("slow")
+      var game = Games.findOne({name:"Carcassone"});
+      Session.set("current_game", game._id);
    })
    //Boton para acceder a la información de los creadores
    $("#contactButton").click(function(){
@@ -105,6 +116,7 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#contact").show("slow");
+      $("#mycanvas").hide();
    })
    //el boton del ranking solo debe ser visible si estas logueado
    
@@ -113,7 +125,6 @@ Meteor.startup(function() {
     }else{
       $("#rankingButton").show();
     }
-   
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
@@ -128,8 +139,10 @@ Meteor.startup(function() {
 	    $("#allSalas").hide();
 	    $("#jugadrspartida").hide();
 	    $("#allPlayers").hide();
+      $("#chatCarcasson").hide()
+      $("#mycanvas").hide();
+
    })
-   //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
      $("#allSalas").hide();
@@ -141,8 +154,6 @@ Meteor.startup(function() {
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
 		//$("#allPlayers").hide();
-    //ALBERTO, HE AÑADIDO AQUI UNAS LINEAS PARA QUE APAREZCA LA SALA SOLO CUANDO ESTES DENTRO DE ESTA
-    //ESTABA HACIENDO EL AVANDONAR Y ME ESTABA LIANDO
     var jugador = Meteor.user().username;
     var sala= JoinPlayer.findOne({user_name:jugador});
     if(sala){
@@ -267,11 +278,86 @@ Template.unirspartida.Salas= function(){
   var rooms_data=[];
 
   rom.forEach(function (x){
-    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
+    if(x.max_players!=x.in_players){
+      rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
+    }
   })
   console.log(rooms_data)
   return rooms_data;
 }
+
+
+//Templates para la información personal
+
+//Nombre
+Template.Ranking.MyName= function(){
+  var name= Meteor.users.findOne({_id: Meteor.userId()});
+  return name.username
+}
+
+//Ratio
+Template.Ranking.Ratio= function(){
+  var player= Players.findOne({originalID:Meteor.userId()});
+  if(!player){
+    return "Usted no está logueado o no ha jugado aún partidas"
+  }else{
+    var result= player.victories.toString()+"/"+(player.victories+player.defeats+player.dropouts).toString()
+    return result
+  }
+}
+
+//Puntos
+Template.Ranking.Puntos=function(){
+  var player= Players.findOne({originalID:Meteor.userId()});
+  if(!player){
+    return "Usted no está logueado o no ha jugado aún partidas"
+  }else{
+    return player.total_points
+  }
+}
+
+//Posicion
+Template.Ranking.MyPosition=function(){
+  var us= Players.find({}, {limit:4, sort: {points:-1,victories:-1,defeats:1}});
+  var player= Players.findOne({originalID:Meteor.userId()});
+  var user=0;
+  us.forEach (function (m) {
+    if(m.originalID==Meteor.userId()){
+      return false 
+    }else{
+      user=+1;
+    }
+  });
+  if(user==0){
+    if(player){
+      return user+1
+    }else{
+      return "Usted no está logueado o no ha jugado aún partidas"
+    }
+  }else{
+    return user+1;
+  }
+}
+
+//Partidas
+Template.Ranking.Partidas=function(){
+  var matches =  Scores.find({user_id:Meteor.userId()}, {limit:5, sort: {time_end:-1}});
+  var historial = [];
+
+  matches.forEach(function(m){
+      var date = new Date(m.time_end);
+      historial.push({points: m.points, result: m.state, date:date});
+  });
+  return historial
+
+}
+
+//Template para darle a cada canvas una ID distinta
+Template.canvascc.MyId=function(){
+  return Meteor.Meteor.userId();
+}
+
+
 
 //************************************** TEMPLATE DE EVENTOS ****************************
 
@@ -415,7 +501,15 @@ Template.crearpartida.events = {
                 }
               }
             }
-
+            if(rooms.max_players==rooms.in_players){
+              alert("QUE COMIENCE LA PARTIDA!!!!!");
+              Rooms.update({_id:rooms._id},{ $set: {start:true} });
+              Session.set("playing",true)
+              //**************************************************************************\\
+              //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
+              $("#crs").slideUp("slow")
+              $("#mycanvas").slideDown("slow");
+            }
             
           }else{
 
@@ -443,6 +537,7 @@ Template.PrincipalGames.events = {
     	$("#principal").slideUp("slow")
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
+      $("#chatCarcasson").slideUp()
       $("#container").show();
       var game = Games.findOne({name:"AlienInvasion"});
       Session.set("current_game", game._id);
@@ -453,16 +548,18 @@ Template.PrincipalGames.events = {
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
       $("#gamecontainer").show();
+      $("#chatCarcasson").slideUp()
       var game = Games.findOne({name:"FrootWars"});
       Session.set("current_game", game._id);
     },
-    'click #Carcassone': function () { //ESTA PARTE HAY QUE TOCARLA PARA VER SI HAY UNA PARTIDA EN LA QUE
-      //ESTOY Y ADEMAS ESTA EMPEZADA
+    'click #Carcassone': function () { 
       var game = Games.findOne({name:"Carcassone"});
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
 	    $("#crs").show();
+      $("#chatCarcasson").show()
+      $("#serverCarcassone").slideDown("slow")
       var jugador = Meteor.user().username;
       var sala= JoinPlayer.findOne({user_name:jugador});
       if(sala){
@@ -507,13 +604,13 @@ Template.unirspartida.events={
             //miramos si a sala cumple el cupo para iniciar la partida, si no mostramos solo la sala
             var room=Rooms.findOne({_id:sala},{})
             console.log(room)
-            if(room.max_players==room.in_players){
+            if(room.max_players==(room.in_players+room.max_IAs)){
               alert("QUE COMIENCE LA PARTIDA!!!!!");
               Rooms.update({_id:room._id},{ $set: {start:true} });
               Session.set("playing",true)
               //**************************************************************************\\
               //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
-              $("#serverCarcassone").slideUp("slow")
+              $("#crs").slideUp("slow")
             }else{
               //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
               $("#allPlayers").show();
@@ -566,7 +663,8 @@ Template.jugadrspartida.events={
         Rooms.remove(sala._id)
       }else if(sala.user_name==ensala.user_name){
         ensala= JoinPlayer.findOne({id_room:sala._id},{user_name:{$ne: "IA"}});
-        Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
+        user=Meteor.users.findOne({_id:ensala.originalID})
+        Rooms.update({_id:ensala.id_room},{ $set: {user_name:user.username} });
       }
       Session.set("currentRoom",null)
   },

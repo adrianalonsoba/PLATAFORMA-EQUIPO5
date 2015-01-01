@@ -132,12 +132,17 @@ Meteor.users.allow({
 //Insertar puntuación al acabar un juego
 
 Meteor.methods({
-    matchFinish: function (game, points) {
+    matchFinish: function (game, points,varstate) {
+    if(varstate==null){
+       varstate='';
+    }
 	if (this.userId)
-	    Scores.insert ({user_id: this.userId, 
+	    Scores.insert ({
+                 user_id: this.userId, 
 			     time_end: Date.now(),
 			     points: points,
-			     game_id: game
+			     game_id: game,
+                 state: varstate
 			    });
     },
     matchFinishCarcassone: function (state,points){
