@@ -65,6 +65,7 @@ function adminUser(userId) {
     return (userId && adminUser && userId === adminUser._id);
 }
 
+//*****************ALERT SOLO EL ADMIN DEBE CAMBIAR EL PLAYERS 
 Players.allow({
     insert: function(userId, doc){
 
@@ -76,7 +77,7 @@ Players.allow({
     },
     update: function (userId, docs){
 
-    return adminUser(userId);
+    return Meteor.userId();//esto lo hace el admin
     },
 });
 
@@ -88,6 +89,18 @@ Messages.allow({
     remove: function (userId, docs){
 
 	return adminUser(userId);
+    }
+});
+
+//***************** ALERT ZONA PROVISIONAL
+Scores.allow({
+    insert: function(userId, doc){
+
+    return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+    return adminUser(userId);
     }
 });
 

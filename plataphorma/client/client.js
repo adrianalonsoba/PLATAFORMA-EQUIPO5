@@ -60,10 +60,12 @@ Tracker.autorun(function(){
 	      }else{
 	      	currentRoom=null;
           Session.set("currentRoom",null)
+          if(Session.get("playing")==true){
+            $("#crs").slideDown("slow")
+            $("#mycanvas").slideUp("slow")
+          }
           Session.set("playing",false)
           console.log("no esta en partida")
-          //FUNCIONAAAAAA!!!!!!!!!!!!! SOLO HAY QUE PONER AQUI QUE CUANDO ACABE LA PARTIDA SE OCULTE TODO
-              console.log("partida no empezada o partida terminada")
 	      }
       }
     }
@@ -91,6 +93,38 @@ Meteor.startup(function() {
    $("#contact").hide();
    $("#chatCarcasson").hide();
    $("#mycanvas").hide();
+
+  $("#acabarCarca").click(function(){
+    var room= Session.get("currentRoom")
+    var players= JoinPlayer.find({id_room:room},{})
+    Rooms.remove(room);
+
+    players.forEach(function (x){
+      if(x.originalID!= Meteor.userId()){
+        if(x.user_name!="IA"){
+
+          Scores.insert({
+                  user_id: x.originalID, 
+                  time_end: Date.now(),
+                  points: 50,
+                  game_id: Session.get("current_game"),
+                  state: "perdida"
+          });
+          var player=Players.findOne({originalID:x.originalID})
+          Players.update({_id:player._id}, { $inc: { total_points: +50 , defeats: +1 } });
+
+        }
+
+      }else{
+        Meteor.call("matchFinish", Session.get("current_game"),950,"ganada" );
+        var player=Players.findOne({originalID:x.originalID})
+        Players.update({_id:player._id}, { $inc: { total_points: +950 , victories: +1 } });
+
+      }
+      JoinPlayer.remove(x._id)
+
+    })
+  })
 	
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
@@ -229,7 +263,7 @@ Template.Ranking.ByVictories=function(){
 
 
 Template.Ranking.ByPoints=function(){
-      var us= Players.find({}, {limit:4, sort: {points:-1}});
+      var us= Players.find({}, {limit:4, sort: {total_points:-1}});
       var users_data = [];
       var user;
       us.forEach (function (m) {
@@ -318,24 +352,26 @@ Template.Ranking.Puntos=function(){
 
 //Posicion
 Template.Ranking.MyPosition=function(){
-  var us= Players.find({}, {limit:4, sort: {points:-1,victories:-1,defeats:1}});
+  var us= Players.find({}, {limit:4, sort: {total_points:-1,victories:-1,defeats:1}});
+  console.log(us)
   var player= Players.findOne({originalID:Meteor.userId()});
   var user=0;
-  us.forEach (function (m) {
-    if(m.originalID==Meteor.userId()){
-      return false 
+  var oculto=true;
+  us.forEach(function (m) {
+    console.log(m.originalID)
+    if(m.originalID!=Meteor.userId()){
+      if(oculto){
+        user+=1
+      }
     }else{
-      user=+1;
+      oculto=false;
     }
   });
-  if(user==0){
-    if(player){
-      return user+1
-    }else{
-      return "Usted no está logueado o no ha jugado aún partidas"
-    }
+  console.log(user)
+  if(player){
+    return user+1
   }else{
-    return user+1;
+    return "Usted no está logueado o no ha jugado aún partidas"
   }
 }
 
