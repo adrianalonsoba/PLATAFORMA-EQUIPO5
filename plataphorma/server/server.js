@@ -158,15 +158,32 @@ Meteor.methods({
                  state: varstate
 			    });
     },
-    matchFinishCarcassone: function (state,points){
-    	if (this.userId){
-    		if(state=="ganada"){
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , victories: +1 } });
-    		}else if(state="perdida"){
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , defeats: +1 } });
-    		}else{
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: -50 , dropouts: +1 } });
-    		}
+     
+    matchFinishCarcassone: function (Puntuacion){
+    	
+        var haGanado=0;
+        var aux=0;
+        var j;
+        var i;
+
+        for(j=0;j<Puntuacion.puntos.length;j++){
+
+            if (aux<Puntuacion.puntos[j]){
+                haGanado=j;
+                aux=aux+Puntuacion.puntos[j];
+            }
+
+        }
+
+        if (this.userId){
+
+            for(i=0;i<Puntuacion.user_id.length;i++){
+                if(i=j){
+                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , victories: +1 } });
+                }else{
+                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , defeats: +1 } });
+                }  
+            }
     	}
     }
 });
