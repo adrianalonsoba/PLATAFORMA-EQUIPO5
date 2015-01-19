@@ -58,25 +58,8 @@
                     <li>
                         <a href="#" id="contactButton">Contact</a>
                     </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portfolio <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="portfolio-1-col.html">1 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-2-col.html">2 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-3-col.html">3 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-4-col.html">4 Column Portfolio</a>
-                            </li>
-                            <li>
-                                <a href="portfolio-item.html">Single Portfolio Item</a>
-                            </li>
-                        </ul>
+                    <li>
+                        <a href="#" id="acabarCarca">Finish</a>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
@@ -93,7 +76,7 @@
                         </ul>
                     </li>
                     <li>
-			<!--*********************************** REGISTRO DE USUARIOS ************************************** -->
+	<!--*********************************** REGISTRO DE USUARIOS ************************************** -->
                         <a href="#">{{>loginButtons}}</a>
                     </li>
                 </ul>
@@ -151,9 +134,28 @@
 
 <!--______________________________________ CARCASSONE _____________________________________-->
 		<!-- Content Row -->
-		<div class="row" id="crs">
-			{{>Carcassone}}
-		</div>
+        <div id="serverCarcassone">
+            <div id="mycanvas">
+                ESTOY AQUI!
+                {{canvascc}}
+            </div>
+    		<div class="row" id="crs">
+    			{{>Carcassone}}
+    		</div>
+            <!-- HE DIFERENCIADO ENTRE EL SERVIDOR DE CARCASSONE Y EL CHAT PARA QUE SALGA CUANDO SE JUEGA-->
+            <div id="chatCarcasson" class="row">
+                <div class="col-md-6" id="chatZone">
+                    {{> chatroom}}
+                </div>
+                <div class="col-md-6" id="messageZone">
+                    <p>Mensaje 1</p>
+                    <p>Mensaje 2</p>
+                    <p>Mensaje 3</p>
+                    <p>Mensaje 4</p>
+                    <p>Mensaje 5</p>
+                </div>
+            </div>
+        </div>
 
 <!-- Page Heading/Breadcrumbs -->
     <div id="contact">
@@ -313,84 +315,69 @@
 <!--_________Template para Carcassone________-->
 <template name="Carcassone">
 	    <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">{{game}}
-                    </h1>
-                </div>
+            <div class="col-md-12">
+                <h1 class="page-header">
+					{{game}}
+                </h1>
             </div>
-            <div class="col-lg-8">
-                <!-- Preview Image -->
+        </div>
+		<div class="row">
+            <div class="col-md-12">
                   <div id='gcontainer'>
                     {{> inicrs}}
 				  </div>
-       		<div class="row">
-		        <div class="col-md-6" id="crpart">
-						{{> crearpartida}} 
-		     	</div>
-		        <div class="col-md-6" id="allSalas">
-						{{> unirspartida}}
-		        </div>
-				<div class="col-md-6" id="allPlayers">
-						{{> jugadrspartida}}
-		        </div>
-                <hr>
-                 Tutorial
-                <hr>
 			</div>
-            </div>
+		</div>
+   		<div class="row">
+	        <div class="col-md-6" id="crpart">
+					{{> crearpartida}} 
+	     	</div>
+	        <div class="col-md-6" id="allSalas">
+					{{> unirspartida}}
+	        </div>
+			<div class="col-md-6" id="allPlayers">
+					{{> jugadrspartida}}
+	        </div>
+		</div>
 </template>
 <!--___________Template pagina inicial Carcassone_________-->
 <template name="inicrs">
-	<!--div class="fill" style="background-image:url('/home/alberto/Escritorio/Fondo_inicial.jpg');"></div-->
-		<div class="jumbotron" style="background: url(images/Fondo_inicial.png); height: 200px; width: 868px;">
 			<a href="#" class="btn btn-default" id="createPartida" >Crear partida</a>
 			<a href="#" class="btn btn-default" id="unirsePartida">Unirse a partida</a>
-		</div>
-	<!--/div-->
 </template>
 <!--____________Template crear partida________-->
 <template name="crearpartida">
 
     <form>
-    	<div class="jumbotron" style="background: url(images/40-589c4_1024x0768.jpg); height: 300px; width: 300px;">
-    			<p>Jugadores:<input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
-    			<p>IA:<input type="number" placeholder="Introduce nº IA" id="ia"></p>
-    			
-    			<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
-    			
-    	</div>
+		<p>Jugadores:</p><p><input type="number" placeholder="Introduce nº jugadores" id="Jugadores"></p>
+		<p>IA:</p><p><input type="number" placeholder="Introduce nº IA" id="ia"></p>
+		<button class="btn btn-default" type="submit" id="aceptar">Aceptar</button>
     </form>
 
 </template>
-<!--____________Template unirse partida_______-->
+<!--____________Template unirse partida______-->
 <template name="unirspartida">
-	<div class="well" style="background: url(images/espadas-medievales-25209393.jpg); height: 800px; width: 300px;">
-		<div class="col-md-4">
-            {{#each Salas}}
-                <li>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
-                    <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
-					<a value="{{id}}" class="btn btn-default" id= "toPlayers">Apuntados</a>
-                </li>
-            {{/each}}
-		</div>
-	</div>
+	<h2 align="center">SALAS</h2>
+    {{#each Salas}}
+        <p>Partida de <strong>{{host}}</strong> Jugadores: {{dentro}}/{{jugadores}} (IA:{{ia}})
+            <a value="{{id}}" class="btn btn-default" id="toPlay">Unirse</a>
+			<a value="{{id}}" class="btn btn-default" id="toPlayers">Apuntados</a>
+        </p>
+    {{/each}}
 </template>
 <!--____________Template jugadores en partida__________-->
 <template name="jugadrspartida">
-	<div class="jumbotron" style="background: url(images/medieval-dama-precioso-imagen.jpg); height: 300px; width: 600px;">
-		<div class="col-md-4">
-			<h2>JUGADORES</h2>
+	<h2 align="center">JUGADORES</h2>
         {{#each Jugador}}
-         <strong>{{nombre}}</strong>
+        <p><strong>{{nombre}}</strong></p>
         {{/each}}
-		</div>
-        <a class="btn btn-default" id= "dropOutGame" style="bottom:30px;left:30px; position:absolute">Avandonar</a>
-	</div>
+        <a class="btn btn-default" id= "dropOutGame">Abandonar</a>
+		<a class="btn btn-default" id= "return">Atras</a>
 </template>
 
-<!--_________Template para Carcassone_________-->
-<template name="carcassone">
-  <canvas  id="gamec" width='320' height='480'></canvas>
+<!--_________Template para canvas Carcassone_________-->
+<template name="canvascc">
+  <canvas  id="{{MyId}}" width='1000' height='700'></canvas>
 </template>
 <!--_________Template para Alien Invasion________-->
 <template name="alien_invasion">
@@ -476,11 +463,11 @@
         <div class="row">
             <div class="well">
                 <div class="col-lg-12">
-                    <h3 class="page-header">[FOTACA!] Personal info</h3>
+                    <h3 class="page-header">{{MyName}}</h3>
                 </div>
 
-                <p>Posicion: [POSICIONACA!]</p>
-                <p>Ratio: [Ganadas/Perdidas]</p>
+                <p>Posicion: {{MyPosition}}</p>
+                <p>Ratio: {{Ratio}}</p>
                 <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -489,16 +476,13 @@
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <li><a href="#">Partida</a>
-                                    </li>
-                                <li><a href="#">Partida</a>
-                                    </li>
-                                 <li><a href="#">Partida</a>
-                                    </li>
+                                {{#each Partidas}}
+                                <li><a>{{points}} {{result}} {{date}}</a></li>
+                                {{/each}}
                             </div>
                         </div>
                  </div>
-                 <h3 class="page-header">PUNTOS:</h3>
+                 <h3 class="page-header">PUNTOS: {{Puntos}}</h3>
             </div>
         </div>
         <!-- /.row -->
@@ -539,3 +523,40 @@
     </tbody>
   </table>
 </template>
+
+<template name="chatroom">
+  {{#if none }}
+  <h3> Chat Plataphorma </h3>
+  {{else}}
+  <h3> Chat {{gameName}} </h3>
+  {{/if}}
+  
+  {{> inputroom    }}
+  {{> messagesroom }}
+</template>
+
+
+<template name="inputroom">
+  <p>Message: <input type="text" id="messageroom"></p>
+
+  
+  <div class="alert fade in" id="login-error" style="display:none;">
+    <button type="button" class="close">x</button>
+    You must be signed in to post messages.
+  </div>
+
+</template>
+
+<template name="messagesroom">
+  <table id="rooms" class="table table-striped">  
+    <tbody>
+      {{#each messagesroom}}
+      <tr>
+    <td><strong>{{name}}:</strong></td>
+    <td>{{messageroom}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+

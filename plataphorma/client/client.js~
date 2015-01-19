@@ -1,6 +1,6 @@
 var currentUser = null;
-var currentRoom= null;
-
+//var currentRoom= null;
+var playing=false;
 
 // Nos suscribimos al catalogo de juegos
 Meteor.subscribe("all_games");
@@ -20,42 +20,63 @@ Tracker.autorun(function(){
     var current_game = Session.get("current_game");
     Meteor.subscribe("current_scores", current_game);
     Meteor.subscribe("messages_current_game", current_game);
+		
+
+});
+
+//Reactivo para cambiar la sala en la que estamos
+Tracker.autorun(function(){
+	  var	currentRoom= Session.get("currentRoom");
+    Meteor.subscribe("messages_current_room", currentRoom);
+
 });
 
 //Reactivo para mostrar o quitar el ranking
 Tracker.autorun(function(){
     currentUser = Meteor.userId();
-    currentRoom=null;
+    playing= Session.get("playing")
     if(currentUser==null){
       $("#rankingButton").hide();
       $("#allPlayers").hide();
+      Session.set("currentRoom",null)
+      Session.set("playing",false)
     }else{
       $("#rankingButton").show();
 
       //Inicializacion de los jugadores, compruebo si ya he creado el usuario en la base de datos.
       if(Meteor.userId()){
-      	      console.log(Meteor.userId())
-      	      var id= Meteor.userId();
-	      var yaCreado = Players.findOne({originalID:id});
-	      console.log(yaCreado);
-
-	      if (yaCreado==null){
-		Players.insert({
-		  originalID: id ,
-		  total_points: 0,
-		  victories: 0,
-		  defeats: 0,
-		  dropouts:0
-		});
-	      }
 	      var juego=JoinPlayer.findOne({originalID:Meteor.userId()})
 	      if(juego!=undefined){
 		      console.log(juego.id_room)
 		      currentRoom=juego.id_room;
+          Session.set("currentRoom",currentRoom);
+          Meteor.subscribe("messages_current_room", currentRoom);
+
+            var sala= Rooms.findOne({_id:currentRoom})
+            if(sala.start){
+              Session.set("playing",true)
+                $("#minigames").slideUp("slow")
+                $("#principal").slideUp("slow")
+                $("#myCarousel").hide("slow")
+                $("#crs").hide()
+                $("#chatCarcasson").show()
+                $("#mycanvas").show();
+                alert("A JUGARRRRR!!!!")
+            }
+	      }else{
+	      	currentRoom=null;
+          Session.set("currentRoom",null)
+          if(Session.get("playing")==true){
+            $("#crs").slideDown("slow")
+            $("#mycanvas").slideUp("slow")
+          }
+          Session.set("playing",false)
+          console.log("no esta en partida")
 	      }
       }
     }
 });
+
 
 /*******************************************************************************
  *  Inicializacion del juego
@@ -76,6 +97,40 @@ Meteor.startup(function() {
    $("#unirspartida").hide();
    $("#jugadrspartida").hide();
    $("#contact").hide();
+   $("#chatCarcasson").hide();
+   $("#mycanvas").hide();
+
+  $("#acabarCarca").click(function(){
+    var room= Session.get("currentRoom")
+    var players= JoinPlayer.find({id_room:room},{})
+    Rooms.remove(room);
+
+    players.forEach(function (x){
+      if(x.originalID!= Meteor.userId()){
+        if(x.user_name!="IA"){
+
+          Scores.insert({
+                  user_id: x.originalID, 
+                  time_end: Date.now(),
+                  points: 50,
+                  game_id: Session.get("current_game"),
+                  state: "perdida"
+          });
+          var player=Players.findOne({originalID:x.originalID})
+          Players.update({_id:player._id}, { $inc: { total_points: +50 , defeats: +1 } });
+
+        }
+
+      }else{
+        Meteor.call("matchFinish", Session.get("current_game"),950,"ganada" );
+        var player=Players.findOne({originalID:x.originalID})
+        Players.update({_id:player._id}, { $inc: { total_points: +950 , victories: +1 } });
+
+      }
+      JoinPlayer.remove(x._id)
+
+    })
+  })
 	
    //Boton para acceder al ranking
    $("#rankingButton").click(function(){
@@ -86,6 +141,11 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#ranking").slideDown("slow");
+      $("#chatCarcasson").slideUp()
+      $("#mycanvas").hide();
+      $("#serverCarcassone").slideUp("slow")
+      var game = Games.findOne({name:"Carcassone"});
+      Session.set("current_game", game._id);
    })
    //Boton para acceder a la información de los creadores
    $("#contactButton").click(function(){
@@ -96,6 +156,7 @@ Meteor.startup(function() {
       $("#container").hide();
       $("#gamecontainer").hide();
       $("#contact").show("slow");
+      $("#mycanvas").hide();
    })
    //el boton del ranking solo debe ser visible si estas logueado
    
@@ -104,7 +165,6 @@ Meteor.startup(function() {
     }else{
       $("#rankingButton").show();
     }
-   
    //Si volvemos al home regresamos al estado original
    $("#home").click(function(){
    		$("#minigames").slideUp("slow")
@@ -119,8 +179,10 @@ Meteor.startup(function() {
 	    $("#allSalas").hide();
 	    $("#jugadrspartida").hide();
 	    $("#allPlayers").hide();
+      $("#chatCarcasson").hide()
+      $("#mycanvas").hide();
+
    })
-   //EL DIV DEL RECUADRO DE LAS SALAS AHORA SE LLAMA "allSalas"
   $("#createPartida").click(function(){
 	   $("#crpart").show();
      $("#allSalas").hide();
@@ -132,8 +194,6 @@ Meteor.startup(function() {
 		$("#crpart").hide();
 		//$("#gcontainer").hide();
 		//$("#allPlayers").hide();
-    //ALBERTO, HE AÑADIDO AQUI UNAS LINEAS PARA QUE APAREZCA LA SALA SOLO CUANDO ESTES DENTRO DE ESTA
-    //ESTABA HACIENDO EL AVANDONAR Y ME ESTABA LIANDO
     var jugador = Meteor.user().username;
     var sala= JoinPlayer.findOne({user_name:jugador});
     if(sala){
@@ -199,8 +259,8 @@ Template.Ranking.ByVictories=function(){
       var users_data = [];
 
       us.forEach (function (m) {
- 
-        users_data.push({name: m.user_name, victories: m.victories, derrotas: m.defeats});
+        user=Meteor.users.findOne({_id:m.originalID})
+        users_data.push({name: user.username, victories: m.victories, derrotas: m.defeats});
         
       });
 
@@ -209,12 +269,12 @@ Template.Ranking.ByVictories=function(){
 
 
 Template.Ranking.ByPoints=function(){
-      var us= Players.find({}, {limit:4, sort: {points:-1}});
+      var us= Players.find({}, {limit:4, sort: {total_points:-1}});
       var users_data = [];
-
+      var user;
       us.forEach (function (m) {
- 
-        users_data.push({name: m.user_name, points: m.total_points});
+        user=Meteor.users.findOne({_id:m.originalID})
+        users_data.push({name: user.username, points: m.total_points});
         
       });
 
@@ -235,10 +295,24 @@ Template.messages.messages = function () {
     return messages;
 }
 
+//Template para los mensajes de los chats de sala
+Template.messagesroom.messagesroom = function () {
+
+    var messagesColl =  Messages.find({}, { sort: { time: -1 }});
+    var messages = [];
+
+    messagesColl.forEach(function(m){
+        var userName = Meteor.users.findOne(m.user_id).username;
+        messages.push({name: userName , message: m.message});
+    });
+
+    return messages;
+}
+
 //helper que muestra el nombre de cada jugador de la sala a la que te unes
 Template.jugadrspartida.Jugador= function(){
-  //falta filtrar jugadores por la sala en cuestion
-  console.log(currentRoom)
+
+  console.log(Session.get("currentRoom"))
   var players= JoinPlayer.find({id_room:currentRoom},{})
   console.log(players);
   var players_name=[];
@@ -251,17 +325,95 @@ Template.jugadrspartida.Jugador= function(){
 
 // Templates de salas de juego
 Template.unirspartida.Salas= function(){
+
   var rom= Rooms.find({},{})
 
   console.log(rom)
   var rooms_data=[];
 
   rom.forEach(function (x){
-    rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
+    if(x.max_players!=x.in_players){
+      rooms_data.push({host:x.user_name,id:x._id,jugadores:x.max_players,ia:x.max_IAs,dentro:x.in_players})
+    }
   })
   console.log(rooms_data)
   return rooms_data;
 }
+
+
+//Templates para la información personal
+
+//Nombre
+Template.Ranking.MyName= function(){
+  var name= Meteor.users.findOne({_id: Meteor.userId()});
+  return name.username
+}
+
+//Ratio
+Template.Ranking.Ratio= function(){
+  var player= Players.findOne({originalID:Meteor.userId()});
+  if(!player){
+    return "Usted no está logueado o no ha jugado aún partidas"
+  }else{
+    var result= player.victories.toString()+"/"+(player.victories+player.defeats+player.dropouts).toString()
+    return result
+  }
+}
+
+//Puntos
+Template.Ranking.Puntos=function(){
+  var player= Players.findOne({originalID:Meteor.userId()});
+  if(!player){
+    return "Usted no está logueado o no ha jugado aún partidas"
+  }else{
+    return player.total_points
+  }
+}
+
+//Posicion
+Template.Ranking.MyPosition=function(){
+  var us= Players.find({}, {limit:4, sort: {total_points:-1,victories:-1,defeats:1}});
+  console.log(us)
+  var player= Players.findOne({originalID:Meteor.userId()});
+  var user=0;
+  var oculto=true;
+  us.forEach(function (m) {
+    console.log(m.originalID)
+    if(m.originalID!=Meteor.userId()){
+      if(oculto){
+        user+=1
+      }
+    }else{
+      oculto=false;
+    }
+  });
+  console.log(user)
+  if(player){
+    return user+1
+  }else{
+    return "Usted no está logueado o no ha jugado aún partidas"
+  }
+}
+
+//Partidas
+Template.Ranking.Partidas=function(){
+  var matches =  Scores.find({user_id:Meteor.userId()}, {limit:5, sort: {time_end:-1}});
+  var historial = [];
+
+  matches.forEach(function(m){
+      var date = new Date(m.time_end);
+      historial.push({points: m.points, result: m.state, date:date});
+  });
+  return historial
+
+}
+
+//Template para darle a cada canvas una ID distinta
+Template.canvascc.MyId=function(){
+  return Meteor.Meteor.userId();
+}
+
+
 
 //************************************** TEMPLATE DE EVENTOS ****************************
 
@@ -287,6 +439,34 @@ Template.input.events = {
         }
     } 
 }
+
+//Template para los mensajes de sala
+
+Template.inputroom.events = {
+    'keydown input#messageroom' : function (event) {
+        if (event.which == 13) {
+            if (Meteor.userId()){
+                var user_id = Meteor.user()._id;
+                var message = $('#messageroom');
+                if (message.value != '') {
+                    Messages.insert({
+                        user_id: user_id,
+                        message: message.val(),
+                        time: Date.now(),
+                        game_id: Session.get("current_game"),
+												id_room:Session.get("currentRoom")
+                    });
+                    message.val('');
+                }
+            }
+						
+            else {
+                $("#login-error").show();
+            }
+        }
+    } 
+}
+
 
 //Template para la creacion de una partida con el boton nueva partida
 
@@ -321,14 +501,13 @@ Template.crearpartida.events = {
             alert("El numero de IA debe ser inferior al numero de jugadores");
           }
 
-          if (numeroJugadores==""){
+          if (isNaN(numeroJugadores)){
             formularioIncompleto=true;
             alert("No has seleccionado numero de jugadores");
           }
           
-          if (numeroIA==""){
-            formularioIncompleto=true;
-            alert("No has seleccionado numero de IA");
+          if (isNaN(numeroIA)){
+            numeroIA=0;
           }
 
           //Comprobacion en la consola de que se cogen correctamente los datos del formulario
@@ -347,14 +526,15 @@ Template.crearpartida.events = {
   	          if(yaCreada==null){
 
                    //Insertamos la sala con los datos introducidos, en la coleccion rooms
-
-                   Rooms.insert({
-                     user_name: jugador,
-                     max_players: numeroJugadores,
-                     max_IAs: numeroIA,
-                     date: Date.now(),
-                     in_players: numeroIA+1 //Como jugadores en la sala estan el creador de la partida y el numero de IA seleccionada
-                   });
+                   
+                    Rooms.insert({
+                       user_name: jugador,
+                       max_players: numeroJugadores,
+                       max_IAs: numeroIA,
+                       date: Date.now(),
+                       in_players: numeroIA+1, //Como jugadores en la sala estan el creador de la partida y el numero de IA seleccionada
+                       start:false
+                     });
 
               }else{
   		            alert("Ya tienes una partida en curso creada");
@@ -381,6 +561,19 @@ Template.crearpartida.events = {
                 user_name: jugador
               });
 
+            Session.set("currentRoom",rooms._id)
+
+            var yaCreado = Players.findOne({originalID:Meteor.userId()})
+            if (yaCreado==null){
+              Players.insert({
+                originalID: Meteor.userId() ,
+                total_points: 0,
+                victories: 0,
+                defeats: 0,
+                dropouts:0
+              });
+            }
+
             //Insertamos como jugadores a tantas IA como nos hayan pasado
 
               if(numeroIA>0){
@@ -392,7 +585,15 @@ Template.crearpartida.events = {
                 }
               }
             }
-
+            if(rooms.max_players==rooms.in_players){
+              alert("QUE COMIENCE LA PARTIDA!!!!!");
+              Rooms.update({_id:rooms._id},{ $set: {start:true} });
+              Session.set("playing",true)
+              //**************************************************************************\\
+              //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
+              $("#crs").slideUp("slow")
+              $("#mycanvas").slideDown("slow");
+            }
             
           }else{
 
@@ -406,7 +607,12 @@ Template.crearpartida.events = {
           tmpl.find('#Jugadores').value="";
           tmpl.find('#ia').value="";
         }
-    } 
+    },
+	
+	'click #aceptar':function(){
+		$("#crpart").hide();
+		$("#allSalas").show();
+	} 
 }; 
 
 //Template para cambiar de juego
@@ -415,6 +621,7 @@ Template.PrincipalGames.events = {
     	$("#principal").slideUp("slow")
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
+      $("#chatCarcasson").slideUp()
       $("#container").show();
       var game = Games.findOne({name:"AlienInvasion"});
       Session.set("current_game", game._id);
@@ -425,20 +632,25 @@ Template.PrincipalGames.events = {
     	$("#minigames").show("slow")
     	$("#myCarousel").hide("slow")
       $("#gamecontainer").show();
+      $("#chatCarcasson").slideUp()
       var game = Games.findOne({name:"FrootWars"});
       Session.set("current_game", game._id);
     },
-    'click #Carcassone': function () { //ESTA PARTE HAY QUE TOCARLA PARA VER SI HAY UNA PARTIDA EN LA QUE
-      //ESTOY Y ADEMAS ESTA EMPEZADA
+    'click #Carcassone': function () { 
       var game = Games.findOne({name:"Carcassone"});
       $("#minigames").slideUp("slow")
       $("#principal").slideUp("slow")
       $("#myCarousel").hide("slow")
 	    $("#crs").show();
+      $("#chatCarcasson").show()
+      $("#serverCarcassone").slideDown("slow")
       var jugador = Meteor.user().username;
       var sala= JoinPlayer.findOne({user_name:jugador});
       if(sala){
         $("#allPlayers").show();
+      }
+      if(Session.get("playing")){
+        $("#serverCarcassone").hide()
       }
       Session.set("current_game", game._id);
     },
@@ -459,22 +671,35 @@ Template.unirspartida.events={
               user_name: jugador
             });
             currentRoom=sala;
+            Session.set("currentRoom",sala)
+            //Inicializacion del usuario cuando vamos a usar la base de datos para el
+            var yaCreado = Players.findOne({originalID:Meteor.userId()})
+            if (yaCreado==null){
+              Players.insert({
+                originalID: Meteor.userId() ,
+                total_points: 0,
+                victories: 0,
+                defeats: 0,
+                dropouts:0
+              });
+            }
             //actualizamos la sala
             Rooms.update({_id:sala},{ $inc: {in_players:+1} });
             //miramos si a sala cumple el cupo para iniciar la partida, si no mostramos solo la sala
             var room=Rooms.findOne({_id:sala},{})
             console.log(room)
-            if(room.max_players==room.in_players){
+            if(room.max_players==(room.in_players+room.max_IAs)){
               alert("QUE COMIENCE LA PARTIDA!!!!!");
+              Rooms.update({_id:room._id},{ $set: {start:true} });
+              Session.set("playing",true)
               //**************************************************************************\\
               //Esto lo pongo como auxiliar, pero hay que quitarlo y usar un tracker autorun
-              $("#allPlayers").show();
-              $("#allSalas").slideUp("slow")
+              $("#crs").slideUp("slow")
             }else{
               //aqui se muestra la sala, y se rellena con la plantilla de jugadrspartida
               $("#allPlayers").show();
               //La sala de partidas tambien debe desaparecer
-              $("#allSalas").slideUp("slow")
+              //$("#allSalas").slideUp("slow")
             }
           //en otro caso salta un alert
           }else{
@@ -522,9 +747,14 @@ Template.jugadrspartida.events={
         Rooms.remove(sala._id)
       }else if(sala.user_name==ensala.user_name){
         ensala= JoinPlayer.findOne({id_room:sala._id},{user_name:{$ne: "IA"}});
-        Rooms.update({_id:ensala.id_room},{ $set: {user_name:ensala.user_name} });
+        user=Meteor.users.findOne({_id:ensala.originalID})
+        Rooms.update({_id:ensala.id_room},{ $set: {user_name:user.username} });
       }
-  }
+      Session.set("currentRoom",null)
+  },
+	'click #return':function(){
+		$("#allPlayers").hide();
+	}
 }
 
 //Zona de registro 

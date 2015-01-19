@@ -537,7 +537,7 @@
 
 
 <template name="inputroom">
-  <p>Message: <input type="text" id="message"></p>
+  <p>Message: <input type="text" id="messageroom"></p>
 
   
   <div class="alert fade in" id="login-error" style="display:none;">
@@ -550,7 +550,7 @@
 <template name="messagesroom">
   <table id="rooms" class="table table-striped">  
     <tbody>
-      {{#each messages}}
+      {{#each messagesroom}}
       <tr>
     <td><strong>{{name}}:</strong></td>
     <td>{{message}}</td>
