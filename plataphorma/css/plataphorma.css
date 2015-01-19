@@ -92,13 +92,9 @@
 }
 
 #chatZone{
+	height: 438px;
+	width: 338px;
 	top: 30px;
 	left: 20px;
-	background: blue;
-}
-
-#messageZone{
-	top: 30px;
-	left: 40px;
-	background: red;
+	background-image: url(images/chat2.jpg);
 }
