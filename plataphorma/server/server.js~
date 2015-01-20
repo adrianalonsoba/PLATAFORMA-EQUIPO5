@@ -51,6 +51,13 @@ Meteor.publish("messages_current_game", function (current_game) {
 });
 
 
+Meteor.publish("messages_current_room", function (currentRoom) {
+
+    return Messages.find({id_room: currentRoom}, 
+             {limit:5, sort: {time:-1}});
+    
+});
+
 
 //Definición de permisos de usuarios que intentan tocar dentro de la colección users.
 function adminUser(userId) {
@@ -58,6 +65,7 @@ function adminUser(userId) {
     return (userId && adminUser && userId === adminUser._id);
 }
 
+//*****************ALERT SOLO EL ADMIN DEBE CAMBIAR EL PLAYERS 
 Players.allow({
     insert: function(userId, doc){
 
@@ -69,7 +77,7 @@ Players.allow({
     },
     update: function (userId, docs){
 
-    return Meteor.userId();
+    return Meteor.userId();//esto lo hace el admin
     },
 });
 
@@ -81,6 +89,18 @@ Messages.allow({
     remove: function (userId, docs){
 
 	return adminUser(userId);
+    }
+});
+
+//***************** ALERT ZONA PROVISIONAL
+Scores.allow({
+    insert: function(userId, doc){
+
+    return Meteor.userId();
+    },
+    remove: function (userId, docs){
+
+    return adminUser(userId);
     }
 });
 
@@ -125,23 +145,51 @@ Meteor.users.allow({
 //Insertar puntuación al acabar un juego
 
 Meteor.methods({
-    matchFinish: function (game, points) {
+    matchFinish: function (game, points,varstate) {
+    if(varstate==null){
+       varstate='';
+    }
 	if (this.userId)
-	    Scores.insert ({user_id: this.userId, 
+	    Scores.insert ({
+                 user_id: this.userId, 
 			     time_end: Date.now(),
 			     points: points,
-			     game_id: game
+			     game_id: game,
+                 state: varstate
 			    });
     },
-    matchFinishCarcassone: function (state,points){
-    	if (this.userId){
-    		if(state=="ganada"){
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , victories: +1 } });
-    		}else if(state="perdida"){
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: +points , defeats: +1 } });
-    		}else{
-    			Meteor.users.update({_id:this.userId}, { $inc: { total_points: -50 , dropouts: +1 } });
-    		}
+     
+    matchFinishCarcassone: function (Puntuacion){
+    	
+        var haGanado=0;
+        var aux=0;
+        var j;
+        var i;
+
+        var unJugador = JoinPlayer.findOne({user_id:Puntuacion.user_id[0]});
+        var room = unjugador.id_room;
+
+        JoinPlayer.remove({id_room:room});
+        Rooms.remove({_id:room});
+
+        for(j=0;j<Puntuacion.puntos.length;j++){
+
+            if (aux<Puntuacion.puntos[j]){
+                haGanado=j;
+                aux=aux+Puntuacion.puntos[j];
+            }
+
+        }
+
+        if (this.userId){
+
+            for(i=0;i<Puntuacion.user_id.length;i++){
+                if(i==haGanado){
+                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , victories: +1 } });
+                }else{
+                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , defeats: +1 } });
+                }  
+            }
     	}
     }
 });
@@ -158,18 +206,19 @@ Meteor.startup(function() {
 		Games.insert({name: "AlienInvasion",banner: "http://ccchuntersville.com/wp-content/uploads/2012/04/Aliens-Banner.jpg",presentation:"Emocionante juego de naves espaciales. Se el piloto de la nave Karsis y embarcate en la defensa del sistema solar contra la amenaza de Andromeda. El futuro de la raza humana esta en tus manos",tutorial:"Use los botones de dirección del teclado para manejar la nave. Con el botón espacio puede disparar. La destrucción de la nave supone el reseteo del juego"});
 		Games.insert({name: "FrootWars",banner: "http://www.viralvideopalace.com/wp-content/uploads/mvbthumbs/img_14457_annoying-orange-monster-burger.jpg",presentation:"¡La batalla ha comenzado! Comida hipercalorífica contra fruta sana... nunca antes en la historia se había visto una batalla tan sangrienta... . Gore en estado puro.",tutorial:"Use el ratón para tensar el tirachinas y lanzar la fruta para golpear la comida basura"});
 
-
+        /**
 		Players.insert({user_name:"Pepe",total_points:8,victories:5,defeats:2,dropouts:0});
 		Players.insert({user_name:"Antonio",total_points:14,victories:7,defeats:0,dropouts:0});
 		Players.insert({user_name:"Manolo",total_points:20,victories:10,defeats:0,dropouts:0});
 		Players.insert({user_name:"Jesulin",total_points:40,victories:30,defeats:20,dropouts:0});
 		Players.insert({user_name:"Carmensita",total_points:0,victories:10,defeats:20,dropouts:0});
+        */
 		
-		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
-		Rooms.insert({user_name:"Antonio",max_players:3,max_IAs:1,in_players:2,date:0});
-		Rooms.insert({user_name:"Manolo",max_players:3,max_IAs:1,in_players:2,date:0});
-		Rooms.insert({user_name:"Jesulin",max_players:3,max_IAs:1,in_players:2,date:0});
-		Rooms.insert({user_name:"Pepiño",max_players:3,max_IAs:1,in_players:2,date:0});
+		Rooms.insert({user_name:"Pepiño",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
+		Rooms.insert({user_name:"Antonio",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
+		Rooms.insert({user_name:"Manolo",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
+		Rooms.insert({user_name:"Jesulin",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
+		Rooms.insert({user_name:"Pepiño",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
 		
 
 	};

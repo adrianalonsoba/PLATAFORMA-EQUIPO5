@@ -147,13 +147,6 @@
                 <div class="col-md-6" id="chatZone">
                     {{> chatroom}}
                 </div>
-                <div class="col-md-6" id="messageZone">
-                    <p>Mensaje 1</p>
-                    <p>Mensaje 2</p>
-                    <p>Mensaje 3</p>
-                    <p>Mensaje 4</p>
-                    <p>Mensaje 5</p>
-                </div>
             </div>
         </div>
 
@@ -548,12 +541,12 @@
 </template>
 
 <template name="messagesroom">
-  <table id="rooms" class="table table-striped">  
+  <table id="rooms" class="table table">  
     <tbody>
       {{#each messagesroom}}
       <tr>
     <td><strong>{{name}}:</strong></td>
-    <td>{{messageroom}}</td>
+    <td>{{message}}</td>
       </tr>
       {{/each}}
     </tbody>

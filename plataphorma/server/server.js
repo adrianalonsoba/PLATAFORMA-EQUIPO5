@@ -54,7 +54,7 @@ Meteor.publish("messages_current_game", function (current_game) {
 Meteor.publish("messages_current_room", function (currentRoom) {
 
     return Messages.find({id_room: currentRoom}, 
-             {limit:5, sort: {time:-1}});
+             {limit:9, sort: {time:-1}});
     
 });
 
