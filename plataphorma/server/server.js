@@ -169,8 +169,8 @@ Meteor.methods({
         var unJugador = JoinPlayer.findOne({user_id:Puntuacion.user_id[0]});
         var room = unjugador.id_room;
 
-        JoinPlayer.remove(id_room:room);
-        Rooms.remove(_id:room);
+        JoinPlayer.remove({id_room:room});
+        Rooms.remove({_id:room});
 
         for(j=0;j<Puntuacion.puntos.length;j++){
 
