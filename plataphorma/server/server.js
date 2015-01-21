@@ -159,15 +159,15 @@ Meteor.methods({
 			    });
     },
      
-    matchFinishCarcassone: function (Puntuacion){
+    matchFinishCarcassone: function (finalizar){
     	
         var haGanado=0;
         var aux=0;
         var j;
         var i;
 
-        var unJugador = JoinPlayer.findOne({user_id:Puntuacion.user_id[0]});
-        var room = unjugador.id_room;
+        var Puntuacion = finalizar[1];
+        var room = finalizar[0];
 
         JoinPlayer.remove({id_room:room});
         Rooms.remove({_id:room});
