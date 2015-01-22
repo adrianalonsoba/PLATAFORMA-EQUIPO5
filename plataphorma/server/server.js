@@ -158,9 +158,8 @@ Meteor.methods({
                  state: varstate
 			    });
     },
-     
     matchFinishCarcassone: function (finalizar){
-    	
+        
         var haGanado=0;
         var aux=0;
         var j;
@@ -172,25 +171,52 @@ Meteor.methods({
         JoinPlayer.remove({id_room:room});
         Rooms.remove({_id:room});
 
-        for(j=0;j<Puntuacion.puntos.length;j++){
+        console.log("----------------------------------------------");
+        console.log(finalizar[0]);
+        console.log(Puntuacion)
 
-            if (aux<Puntuacion.puntos[j]){
+        for(j=0;j<Puntuacion.length;j++){
+
+            if (aux<Puntuacion[j][1]){
                 haGanado=j;
-                aux=aux+Puntuacion.puntos[j];
+                aux=aux+Puntuacion[j][1];
             }
 
         }
 
-        if (this.userId){
+        console.log(haGanado);
 
-            for(i=0;i<Puntuacion.user_id.length;i++){
-                if(i==haGanado){
-                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , victories: +1 } });
-                }else{
-                    Meteor.users.update({_id:Puntuacion.user_id[i]}, { $inc: { total_points: +Puntuacion.puntos[i] , defeats: +1 } });
-                }  
+        if (this.userId){
+            for(i=0;i<Puntuacion.length;i++){
+                if(Players.findOne({originalID:Puntuacion[i][0]})!=null){
+                    if(i==haGanado){
+                        Players.update({originalID:Puntuacion[i][0]}, { $inc: { total_points: +Puntuacion[i][1] , victories: +1 } });
+                        Scores.insert({
+                           user_id: Puntuacion[i][0],
+                           points: Puntuacion[i][1],
+                           time_end: Date.now(),
+                           game_id: "Carcassone",
+                           stade:"Ganada"
+                        });
+                    }else{
+                        Players.update({originalID:Puntuacion[i][0]}, { $inc: { total_points: +Puntuacion[i][1] , defeats: +1 } });
+                        Scores.insert({
+                           user_id: Puntuacion[i][0],
+                           points: Puntuacion[i][1],
+                           time_end: Date.now(),
+                           game_id: "Carcassone",
+                           stade:"Perdida"
+                        });
+                    }  
+                }    
             }
-    	}
+        }
+    },
+    matchInit: function(room,players){
+        console.log(room)
+        nuevaPartida(room, players)
+        
+        //console.log(comenzar(room,players))
     }
 });
 
@@ -203,7 +229,6 @@ Meteor.startup(function() {
     // Miramos si la coleccion de objetos esta vacia, y en caso de estarlo añadimos los juegos
     if (Games.find().count() == 0) {
 		Games.insert({name: "Carcassone",banner: "http://domneuve.com/img/Carcassone%20banner.jpg",presentation:"¡Conviertete en el mas poderoso señor feudal de todos los reinos existentes! Comanda a tus caballeros, apoya el poder del clero y contrata a mercenarios y bandidos para que hagan el trabajo sucio."});
-		Games.insert({name: "AlienInvasion",banner: "http://ccchuntersville.com/wp-content/uploads/2012/04/Aliens-Banner.jpg",presentation:"Emocionante juego de naves espaciales. Se el piloto de la nave Karsis y embarcate en la defensa del sistema solar contra la amenaza de Andromeda. El futuro de la raza humana esta en tus manos",tutorial:"Use los botones de dirección del teclado para manejar la nave. Con el botón espacio puede disparar. La destrucción de la nave supone el reseteo del juego"});
 		Games.insert({name: "FrootWars",banner: "http://www.viralvideopalace.com/wp-content/uploads/mvbthumbs/img_14457_annoying-orange-monster-burger.jpg",presentation:"¡La batalla ha comenzado! Comida hipercalorífica contra fruta sana... nunca antes en la historia se había visto una batalla tan sangrienta... . Gore en estado puro.",tutorial:"Use el ratón para tensar el tirachinas y lanzar la fruta para golpear la comida basura"});
 
         /**
@@ -213,13 +238,7 @@ Meteor.startup(function() {
 		Players.insert({user_name:"Jesulin",total_points:40,victories:30,defeats:20,dropouts:0});
 		Players.insert({user_name:"Carmensita",total_points:0,victories:10,defeats:20,dropouts:0});
         */
-		
-		Rooms.insert({user_name:"Pepiño",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
-		Rooms.insert({user_name:"Antonio",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
-		Rooms.insert({user_name:"Manolo",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
-		Rooms.insert({user_name:"Jesulin",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
-		Rooms.insert({user_name:"Pepiño",max_players:5,max_IAs:1,in_players:2,date:0,start:false});
-		
+
 
 	};
 });
