@@ -602,6 +602,9 @@ Template.crearpartida.events = {
           }
           
         }else{
+          $("#chatZone").hide();
+          $("#allSalas").hide();
+          $("#allPlayers").hide();
           alert("Debes estar logeado para crear una partida");
 
           tmpl.find('#Jugadores').value="";

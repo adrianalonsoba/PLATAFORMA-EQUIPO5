@@ -606,6 +606,9 @@ Template.crearpartida.events = {
 
           tmpl.find('#Jugadores').value="";
           tmpl.find('#ia').value="";
+          $("#chatZone").hide();
+          $("#allSalas").hide();
+          $("#allPlayers").hide();
         }
     },
 	
